@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masjid Al-Falah — Transparansi dan Donasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal-deep: #16423C;
+    --teal-deeper: #0F332E;
+    --ivory: #FAF6EC;
+    --brass: #A67C42;
+    --brass-light: #C9A876;
+    --charcoal: #2A2622;
+    --sage-light: #E8EDE2;
+    --border-soft: #DDD4C0;
+    --white: #FFFFFF;
+    --success: #2D6A4F;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--ivory);
+    color: var(--charcoal);
+    min-height: 100vh;
+  }
+
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--ivory);
+    position: relative;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--teal-deep);
+    color: var(--ivory);
+    padding: 32px 24px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-motif {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 40px;
+  }
+
+  .mosque-name {
+    font-size: 26px;
+    font-weight: 800;
+    margin: 8px 0 4px;
+    letter-spacing: -0.01em;
+  }
+
+  .mosque-sub {
+    font-size: 15px;
+    color: var(--brass-light);
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .icon-badge {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 4px;
+  }
+
+  /* ===== BODY ===== */
+  .body-content {
+    padding: 24px 20px 40px;
+  }
+
+  .section-label {
+    font-size: 15px;
+    color: #6B6459;
+    margin: 4px 4px 14px;
+    font-weight: 500;
+  }
+
+  /* ===== CATEGORY CARDS ===== */
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cat-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--white);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 18px 18px;
+    text-align: left;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.1s ease, box-shadow 0.15s ease;
+  }
+
+  .cat-card:active {
+    transform: scale(0.98);
+  }
+
+  .cat-card.featured {
+    border: 1.5px solid var(--brass);
+    background: linear-gradient(to bottom right, var(--white), #FDF9F1);
+  }
+
+  .cat-icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--sage-light);
+    border-radius: 12px;
+  }
+
+  .cat-card.featured .cat-icon {
+    background: #F4E9D5;
+  }
+
+  .cat-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--charcoal);
+  }
+
+  .cat-desc {
+    font-size: 13.5px;
+    color: #7A7266;
+    margin: 3px 0 0;
+  }
+
+  .cat-arrow {
+    margin-left: auto;
+    flex-shrink: 0;
+    color: #B5AC9C;
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--teal-deep);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 8px 4px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--teal-deep);
+    color: var(--ivory);
+    border: none;
+    border-radius: var(--radius);
+    padding: 17px;
+    font-size: 16.5px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-primary:disabled {
+    background: #B5AC9C;
+    cursor: not-allowed;
+  }
+
+  .btn-whatsapp {
+    background: #2D6A4F;
+  }
+
+  /* ===== AMOUNT GRID ===== */
+  .amount-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .amount-btn {
+    background: var(--white);
+    border: 1.5px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 18px 8px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    color: var(--charcoal);
+    cursor: pointer;
+  }
+
+  .amount-btn.selected {
+    border-color: var(--teal-deep);
+    background: var(--sage-light);
+    color: var(--teal-deep);
+  }
+
+  .custom-input-wrap {
+    margin-bottom: 20px;
+  }
+
+  .custom-input-wrap label {
+    display: block;
+    font-size: 14px;
+    color: #6B6459;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .custom-input {
+    width: 100%;
+    padding: 16px;
+    font-size: 17px;
+    font-family: inherit;
+    font-weight: 700;
+    border: 1.5px solid var(--border-soft);
+    border-radius: 12px;
+    color: var(--charcoal);
+  }
+
+  /* ===== MAULID DALIL BANNER ===== */
+  .dalil-banner {
+    background: linear-gradient(135deg, var(--teal-deep), var(--teal-deeper));
+    color: var(--ivory);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    margin-bottom: 22px;
+  }
+
+  .dalil-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    color: var(--brass-light);
+  }
+
+  .dalil-text {
+    font-size: 14.5px;
+    line-height: 1.65;
+    margin: 0;
+    color: #E4E0D3;
+  }
+
+  .dalil-text + .dalil-text {
+    margin-top: 12px;
+  }
+
+  /* ===== FAQ ACCORDION ===== */
+  .faq-item {
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 16px 4px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--charcoal);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .faq-answer {
+    display: none;
+    padding: 0 4px 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #6B6459;
+  }
+
+  .faq-item.open .faq-answer { display: block; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-chevron { transition: transform 0.2s ease; flex-shrink: 0; }
+
+  .todo-note {
+    background: #FFF4E0;
+    border: 1px dashed #D6A954;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: #8A6416;
+    margin-top: 6px;
+  }
+
+  /* ===== QR SCREEN ===== */
+  .qr-wrap {
+    text-align: center;
+    padding: 8px 0 24px;
+  }
+
+  .qr-image-box {
+    background: var(--white);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 0 auto 20px;
+    max-width: 280px;
+  }
+
+  .qr-image-box img {
+    width: 100%;
+    display: block;
+  }
+
+  .qr-amount {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--teal-deep);
+    margin: 0 0 4px;
+  }
+
+  .qr-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #7A7266;
+    font-size: 14px;
+    margin-top: 16px;
+  }
+
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border-soft);
+    border-top-color: var(--teal-deep);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== SUCCESS SCREEN ===== */
+  .success-wrap {
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    background: var(--sage-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: var(--success);
+  }
+
+  .success-title {
+    font-size: 21px;
+    font-weight: 800;
+    margin: 0 0 8px;
+  }
+
+  .success-sub {
+    font-size: 15px;
+    color: #7A7266;
+    margin: 0 0 32px;
+  }
+
+  /* ===== ZAKAT SCREEN ===== */
+  .zakat-text {
+    font-size: 15px;
+    line-height: 1.65;
+    color: #4A453D;
+    margin-bottom: 24px;
+  }
+
+  .icon-wrap-lg {
+    width: 64px;
+    height: 64px;
+    background: var(--sage-light);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    color: var(--teal-deep);
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ===== TRANSFER SCREEN ===== */
+  .transfer-warning {
+    background: #FFF4E0;
+    border: 1.5px solid #D6A954;
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .transfer-warning svg {
+    flex-shrink: 0;
+    color: #8A6416;
+    margin-top: 1px;
+  }
+
+  .transfer-warning p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #6B4E0F;
+    font-weight: 600;
+  }
+
+  .transfer-method-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    background: var(--sage-light);
+    padding: 4px;
+    border-radius: 12px;
+  }
+
+  .transfer-tab {
+    flex: 1;
+    padding: 11px 8px;
+    border: none;
+    background: none;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    color: #6B6459;
+    cursor: pointer;
+  }
+
+  .transfer-tab.active {
+    background: var(--white);
+    color: var(--teal-deep);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  .transfer-panel { display: none; }
+  .transfer-panel.active { display: block; }
+
+  .bank-card {
+    background: var(--white);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .bank-card img {
+    max-width: 220px;
+    width: 100%;
+    display: block;
+    margin: 0 auto 14px;
+  }
+
+  .rekening-number {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--teal-deep);
+    letter-spacing: 0.5px;
+    margin: 6px 0;
+  }
+
+  .rekening-label {
+    font-size: 13px;
+    color: #7A7266;
+    margin: 0 0 2px;
+  }
+
+  .btn-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--sage-light);
+    color: var(--teal-deep);
+    border: none;
+    border-radius: 10px;
+    padding: 9px 16px;
+    font-size: 13.5px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  /* ===== PROOF UPLOAD SCREEN ===== */
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 14px;
+    color: #6B6459;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 15px;
+    font-family: inherit;
+    border: 1.5px solid var(--border-soft);
+    border-radius: 12px;
+    color: var(--charcoal);
+  }
+
+  .btn-ghost-small {
+    background: none;
+    border: none;
+    color: var(--teal-deep);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 4px 0;
+    text-decoration: underline;
+  }
+
+  .upload-box {
+    border: 1.5px dashed var(--border-soft);
+    border-radius: var(--radius);
+    padding: 24px 16px;
+    text-align: center;
+    cursor: pointer;
+    background: var(--white);
+  }
+
+  .upload-box.has-file {
+    border-color: var(--teal-deep);
+    border-style: solid;
+    padding: 12px;
+  }
+
+  .upload-box svg { color: #B5AC9C; margin-bottom: 8px; }
+  .upload-box p { margin: 0; font-size: 14px; color: #7A7266; }
+  .upload-preview { max-width: 100%; max-height: 220px; border-radius: 8px; display: block; margin: 0 auto; }
+
+  .upload-filename {
+    font-size: 13px;
+    color: var(--teal-deep);
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  /* ===== PENDING SCREEN ===== */
+  .pending-icon {
+    width: 72px;
+    height: 72px;
+    background: #FFF4E0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: #B98A1E;
+  }
+
+
+  /* ===== BERANDA PUBLIK (transparansi) ===== */
+  .saldo-card { background: linear-gradient(160deg, var(--teal-deep), var(--teal-deeper)); color: var(--ivory); border-radius: 18px; padding: 22px 20px 18px; margin-bottom: 14px; }
+  .saldo-label { font-size: 13px; color: var(--brass-light); font-weight: 600; margin: 0 0 6px; letter-spacing: 0.02em; }
+  .saldo-amount { font-size: 32px; font-weight: 800; margin: 0; letter-spacing: -0.01em; word-break: break-word; }
+  .saldo-meta { font-size: 12px; opacity: 0.75; margin: 6px 0 0; }
+  .saldo-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(250,246,236,0.18); }
+  .split-label { font-size: 12px; opacity: 0.75; margin: 0 0 3px; }
+  .split-val { font-size: 15px; font-weight: 700; margin: 0; }
+  .split-val.in { color: #BFE3CC; }
+  .split-val.out { color: #F2C9BE; }
+  .saldo-awal-note { font-size: 12px; opacity: 0.7; margin: 12px 0 0; }
+  .pending-note { background: #FFF6E0; border: 1px solid #EBD9A8; color: #6B5320; border-radius: 12px; padding: 12px 14px; font-size: 13px; line-height: 1.5; margin-top: 12px; }
+  .rekon-card { background: var(--white); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 16px; margin-top: 16px; }
+  .rekon-title { font-size: 15px; font-weight: 700; margin: 0 0 2px; }
+  .rekon-sub { font-size: 12px; color: #8A8375; margin: 0 0 12px; }
+  .kv-row { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; padding: 6px 0; border-bottom: 1px dashed #EAE3D2; }
+  .kv-row span:last-child { font-weight: 600; text-align: right; white-space: nowrap; }
+  .kv-row.strong { font-weight: 700; }
+  .rekon-status { margin-top: 12px; border-radius: 10px; padding: 10px 12px; font-size: 13px; line-height: 1.45; font-weight: 600; }
+  .rekon-status.ok { background: #E3F1E8; color: #1F5A3F; }
+  .rekon-status.warn { background: #FCEBDD; color: #8A4A1B; }
+  .rekon-note { font-size: 12.5px; color: #6B6459; margin: 10px 0 0; }
+  .bar-row { margin-bottom: 12px; }
+  .bar-top { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; margin-bottom: 5px; }
+  .bar-name { font-weight: 500; }
+  .bar-val { font-weight: 700; white-space: nowrap; }
+  .bar-track { height: 8px; background: #EFE9DA; border-radius: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; }
+  .bar-fill.in { background: var(--success); }
+  .bar-fill.out { background: var(--brass); }
+  .panel { background: var(--white); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 16px; margin-top: 12px; }
+  .panel-title { font-size: 14px; font-weight: 700; margin: 0 0 12px; }
+  .h-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+  .h-tab { flex: 1; background: var(--white); border: 1.5px solid var(--border-soft); border-radius: 12px; padding: 11px; font-family: inherit; font-size: 14px; font-weight: 600; color: #6B6459; cursor: pointer; }
+  .h-tab.active { background: var(--teal-deep); border-color: var(--teal-deep); color: var(--ivory); }
+  .h-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; background: var(--white); border: 1px solid var(--border-soft); border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; }
+  .h-main { min-width: 0; }
+  .h-name { font-size: 14.5px; font-weight: 600; margin: 0; word-break: break-word; }
+  .h-meta { font-size: 12px; color: #8A8375; margin: 3px 0 0; word-break: break-word; }
+  .h-amount { font-size: 14.5px; font-weight: 700; white-space: nowrap; margin: 0; }
+  .h-amount.in { color: var(--success); }
+  .h-amount.out { color: #A4452C; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 2px 7px; margin-top: 5px; background: #FFF1CC; color: #7A5A12; }
+  .btn-more { width: 100%; background: none; border: 1.5px solid var(--border-soft); border-radius: 12px; padding: 12px; font-family: inherit; font-size: 14px; font-weight: 600; color: var(--teal-deep); cursor: pointer; margin: 4px 0 8px; }
+  .empty-note { text-align: center; color: #8A8375; font-size: 13.5px; padding: 14px 0; margin: 0; }
+  .info-box { background: var(--sage-light); border-radius: 12px; padding: 14px 16px; margin-top: 16px; font-size: 12.5px; line-height: 1.6; color: #4C5547; }
+  .info-box p { margin: 0 0 8px; }
+  .info-box p:last-child { margin: 0; }
+  .error-card { background: #FCEBDD; color: #8A4A1B; border-radius: 12px; padding: 14px 16px; font-size: 13.5px; margin-bottom: 12px; display: none; }
+  .error-card button { margin-top: 8px; }
+  .qr-amount { text-align: center; }
+  .resume-card { background: var(--sage-light); border: 1.5px solid var(--teal-deep); border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; }
+  .resume-title { font-size: 15px; font-weight: 700; margin: 0 0 4px; }
+  .resume-text { font-size: 13px; line-height: 1.5; margin: 0 0 10px; color: #3F4A41; }
+  .setup-warn { background: #FCEBDD; border: 1px solid #EBC7AA; color: #8A4A1B; border-radius: 12px; padding: 12px 14px; font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
+  .kode-breakdown { text-align: center; font-size: 14px; color: #6B6459; margin: -4px 0 6px; font-weight: 600; }
+  .kode-box { background: #FFF6E0; border: 1px solid #EBD9A8; color: #6B5320; border-radius: 12px; padding: 12px 14px; font-size: 13px; line-height: 1.55; margin-bottom: 14px; }
+  .field-note { font-size: 12px; color: #8A8375; margin: 6px 0 0; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============ HEADER (selalu tampil) ============ -->
+  <div class="header">
+    <svg class="icon-badge" viewBox="0 0 52 52" fill="none">
+      <path d="M26 6C26 6 18 14 18 24C18 30 21 34 26 36C31 34 34 30 34 24C34 14 26 6 26 6Z" stroke="#F5EFE0" stroke-width="2" fill="none"/>
+      <circle cx="26" cy="20" r="3" fill="#C9A876"/>
+      <path d="M10 42C10 36 17 32 26 32C35 32 42 36 42 42" stroke="#F5EFE0" stroke-width="2"/>
+    </svg>
+    <p class="mosque-name">Masjid Al-Falah</p>
+    <p class="mosque-sub">Transparansi dan Donasi Online</p>
+    <svg class="header-motif" viewBox="0 0 480 40" preserveAspectRatio="none">
+      <path d="M0 40 L0 20 Q60 0 120 20 T240 20 T360 20 T480 20 L480 40 Z" fill="#FAF6EC"/>
+    </svg>
+  </div>
+
+  <div class="body-content">
+
+    <!-- ============ SCREEN 0: BERANDA PUBLIK (transparansi, tanpa login) ============ -->
+    <div id="screen-beranda" class="screen active">
+      <div class="error-card" id="b-error">
+        <span id="b-error-text">Data belum dapat dimuat.</span><br>
+        <button class="btn-ghost-small" type="button" onclick="loadBeranda(true)">Coba lagi</button>
+      </div>
+
+      <div class="saldo-card">
+        <p class="saldo-label">Saldo Kas Masjid</p>
+        <p class="saldo-amount" id="b-saldo">Memuat…</p>
+        <p class="saldo-meta" id="b-updated"></p>
+        <div class="saldo-split">
+          <div><p class="split-label">Total pemasukan</p><p class="split-val in" id="b-in">–</p></div>
+          <div><p class="split-label">Total pengeluaran</p><p class="split-val out" id="b-out">–</p></div>
+        </div>
+        <p class="saldo-awal-note" id="b-saldoawal"></p>
+      </div>
+
+      <div class="resume-card" id="b-resume" style="display:none;">
+        <p class="resume-title">Donasi Anda belum selesai</p>
+        <p class="resume-text" id="b-resume-text"></p>
+        <button class="btn-primary" type="button" onclick="resumeDonation()">Lanjutkan kirim bukti</button>
+        <button class="btn-ghost-small" type="button" onclick="discardResume()" style="margin-top:6px;">Batalkan donasi ini</button>
+      </div>
+
+      <button class="btn-primary" type="button" onclick="showScreen('screen-home')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>
+        Donasi Sekarang
+      </button>
+
+      <div class="pending-note" id="b-pending" style="display:none;"></div>
+      <div id="b-rekon" style="display:none;"></div>
+
+      <div class="panel">
+        <p class="panel-title">Pemasukan per kategori</p>
+        <div id="b-incat"></div>
+      </div>
+      <div class="panel">
+        <p class="panel-title">Pengeluaran per kategori</p>
+        <div id="b-outcat"></div>
+      </div>
+
+      <p class="section-label" style="margin-top:22px;">Riwayat transaksi</p>
+      <div class="h-tabs">
+        <button class="h-tab active" id="h-tab-income" type="button" onclick="switchHistory('income')">Pemasukan</button>
+        <button class="h-tab" id="h-tab-expense" type="button" onclick="switchHistory('expense')">Pengeluaran</button>
+      </div>
+      <div id="h-list"></div>
+      <button class="btn-more" id="h-more" type="button" onclick="loadHistory(false)" style="display:none;">Muat lebih banyak</button>
+
+      <div class="info-box">
+        <p><strong>Cara membaca halaman ini.</strong></p>
+        <p>Saldo adalah saldo pembukuan: Saldo Awal + donasi yang sudah diverifikasi + pemasukan tercatat − pengeluaran yang sudah dibayar. Ini bukan saldo rekening bank; pencocokan dengan rekening ditampilkan pada kartu "Pencocokan dengan Rekening Bank" bila sudah dicatat Bendahara.</p>
+        <p>Donasi berstatus "Menunggu Verifikasi" belum dihitung dalam saldo. Bendahara memverifikasinya dengan mencocokkan mutasi rekening. Nama donatur baru tampil setelah diverifikasi, dan donatur dapat memilih "Hamba Allah". Nomor WhatsApp tidak pernah ditampilkan.</p>
+        <p>Pengeluaran "Direncanakan" belum mengurangi saldo. Tiga digit kode unik pada nominal transfer ikut tercatat sebagai donasi. Zakat dikelola terpisah oleh Amil dan tidak termasuk dalam angka di halaman ini.</p>
+      </div>
+      <p style="text-align:center; margin:14px 0 4px;"><button class="btn-ghost-small" type="button" onclick="loadBeranda(true)">Muat ulang data</button> <button class="btn-ghost-small" type="button" onclick="sharePage()">Bagikan halaman ini</button></p>
+    </div>
+
+    <!-- ============ SCREEN 1: PILIH KATEGORI ============ -->
+    <div id="screen-home" class="screen">
+      <button class="btn-back" type="button" onclick="showScreen('screen-beranda')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Beranda
+      </button>
+      <p class="section-label">Pilih jenis donasi</p>
+      <div class="card-list">
+
+        <button class="cat-card" onclick="openAmountScreen('infaq', 'Infaq', 'Untuk kegiatan masjid')">
+          <div class="cat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16423C" stroke-width="1.8"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>
+          </div>
+          <div>
+            <p class="cat-title">Infaq</p>
+            <p class="cat-desc">Untuk kegiatan masjid</p>
+          </div>
+          <svg class="cat-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <button class="cat-card" onclick="openAmountScreen('pembangunan', 'Pembangunan', 'Renovasi dan fasilitas')">
+          <div class="cat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16423C" stroke-width="1.8"><path d="M3 21h18M5 21V7l8-4v18M13 21V11l6 3v7M9 9v.01M9 12v.01M9 15v.01"/></svg>
+          </div>
+          <div>
+            <p class="cat-title">Pembangunan</p>
+            <p class="cat-desc">Renovasi dan fasilitas</p>
+          </div>
+          <svg class="cat-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <button class="cat-card" onclick="openAmountScreen('sedekah-jumat', 'Sedekah Jumat', 'Konsumsi setelah shalat Jumat')">
+          <div class="cat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16423C" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          </div>
+          <div>
+            <p class="cat-title">Sedekah Jumat</p>
+            <p class="cat-desc">Konsumsi setelah shalat Jumat</p>
+          </div>
+          <svg class="cat-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <button class="cat-card featured" onclick="showScreen('screen-maulid')">
+          <div class="cat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A67C42" stroke-width="1.8"><path d="M12 2l2.4 6.8L21 11l-6.6 2.2L12 20l-2.4-6.8L3 11l6.6-2.2L12 2z"/></svg>
+          </div>
+          <div>
+            <p class="cat-title">Maulid Nabi SAW</p>
+            <p class="cat-desc">Donasi penyelenggaraan acara</p>
+          </div>
+          <svg class="cat-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <button class="cat-card" onclick="showScreen('screen-zakat')">
+          <div class="cat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16423C" stroke-width="1.8"><circle cx="12" cy="8" r="3"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/></svg>
+          </div>
+          <div>
+            <p class="cat-title">Zakat</p>
+            <p class="cat-desc">Hubungi Amil masjid</p>
+          </div>
+          <svg class="cat-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- ============ SCREEN 2: PILIH NOMINAL (Infaq/Pembangunan/Sedekah Jumat) ============ -->
+    <div id="screen-amount" class="screen">
+      <button class="btn-back" onclick="showScreen('screen-home')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Kembali
+      </button>
+      <p class="section-label" id="amount-category-label" style="font-size:18px; font-weight:700; color:var(--charcoal);">Infaq</p>
+      <p class="section-label">Pilih nominal</p>
+      <div class="amount-grid" id="amount-grid"></div>
+      <div class="custom-input-wrap">
+        <label>Atau masukkan nominal lain</label>
+        <input type="number" class="custom-input" id="custom-amount" placeholder="Rp 0" oninput="selectCustomAmount(this.value)">
+      </div>
+      <button class="btn-primary" id="pay-btn-standard" onclick="startPayment()" disabled>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM17 17h4v4h-4z"/></svg>
+        Bayar sekarang
+      </button>
+    </div>
+
+    <!-- ============ SCREEN 3: MAULID NABI SAW ============ -->
+    <div id="screen-maulid" class="screen">
+      <button class="btn-back" onclick="showScreen('screen-home')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Kembali
+      </button>
+
+      <div class="dalil-banner">
+        <p class="dalil-title">Dalil dan Keutamaan Memperingati Maulid Nabi SAW</p>
+        <p class="dalil-text">Rasulullah SAW berpuasa setiap hari Senin karena, sebagaimana sabda beliau, "Pada hari itulah aku dilahirkan dan wahyu diturunkan kepadaku" (HR. Muslim). Imam Ibnu Hajar al-Asqalani dalam Fathul Bari mencatat bahwa Abu Lahab mendapat keringanan siksa setiap hari Senin karena rasa gembiranya atas kelahiran Rasulullah.</p>
+        <p class="dalil-text">Imam As-Suyuthi dalam Al-Hawi lil Fatawi menegaskan bahwa peringatan Maulid — berkumpulnya umat, membaca Al-Qur'an, mengenang perjalanan hidup Nabi — termasuk bid'ah hasanah yang berpahala.</p>
+      </div>
+
+      <p class="section-label">Pilih nominal donasi</p>
+      <div class="amount-grid" id="maulid-amount-grid"></div>
+      <div class="custom-input-wrap">
+        <label>Atau masukkan nominal lain</label>
+        <input type="number" class="custom-input" id="maulid-custom-amount" placeholder="Rp 0" oninput="selectCustomAmount(this.value, true)">
+      </div>
+      <button class="btn-primary" id="pay-btn-maulid" onclick="startPayment()" disabled style="margin-bottom: 28px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM17 17h4v4h-4z"/></svg>
+        Bayar sekarang
+      </button>
+
+      <p class="section-label">Pertanyaan seputar donasi ini</p>
+      <div id="faq-list">
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Untuk apa dana ini digunakan?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            [ISI DI SINI: rincian penggunaan dana — misalnya konsumsi, honor penceramah, sound system, dekorasi]
+            <div class="todo-note">Catatan pengembang: ganti teks ini setelah DKM konfirmasi rincian penggunaan dana.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Kapan acara diselenggarakan?
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="faq-answer">
+            [ISI DI SINI: tanggal dan waktu acara]
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SCREEN 4: ZAKAT ============ -->
+    <div id="screen-zakat" class="screen">
+      <button class="btn-back" onclick="showScreen('screen-home')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Kembali
+      </button>
+      <div class="icon-wrap-lg">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/></svg>
+      </div>
+      <p class="zakat-text">Zakat memerlukan akad langsung dengan Amil masjid. Silakan hubungi Amil kami melalui WhatsApp untuk menyelesaikan zakat Anda.</p>
+      <button class="btn-primary btn-whatsapp" onclick="openWhatsApp()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Hubungi Amil via WhatsApp
+      </button>
+    </div>
+
+    <!-- ============ SCREEN 5: CARA TRANSFER ============ -->
+    <div id="screen-transfer" class="screen">
+      <button class="btn-back" onclick="showScreen('screen-home')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Batal
+      </button>
+      <p class="qr-amount" id="transfer-amount-display">Rp 0</p>
+      <p class="kode-breakdown" id="transfer-breakdown"></p>
+      <p style="color:#7A7266; font-size:14px; margin:0 0 20px; text-align:center;" id="transfer-category-display">Infaq</p>
+
+      <div class="transfer-warning">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        <p>Transfer PERSIS Rp <span id="transfer-amount-warning">0</span>, termasuk 3 digit kode unik di belakang. Jangan dibulatkan.</p>
+      </div>
+
+      <div class="setup-warn" id="transfer-setup-warning" style="display:none;"><strong>Mode uji:</strong> nomor rekening dan QRIS belum diisi pengurus. Jangan transfer dulu.</div>
+
+      <div class="kode-box"><strong>Apa itu kode unik?</strong> Tiga digit terakhir membantu Bendahara mencocokkan transfer Anda dengan mutasi rekening. Seluruh nominal, termasuk kode unik, tetap tercatat sebagai donasi Anda. Kode ini berlaku sekitar 6 jam.</div>
+
+      <div class="transfer-method-tabs">
+        <button class="transfer-tab active" id="tab-qris" onclick="switchTransferTab('qris')">Scan QRIS</button>
+        <button class="transfer-tab" id="tab-rekening" onclick="switchTransferTab('rekening')">No. Rekening</button>
+      </div>
+
+      <div class="transfer-panel active" id="panel-qris">
+        <div class="bank-card">
+          <img src="" alt="QRIS BSI Masjid Al-Falah" id="qris-static-image">
+          <p class="rekening-label">Scan menggunakan aplikasi bank atau e-wallet apa pun. Masukkan nominal secara manual sesuai angka di atas.</p>
+        </div>
+      </div>
+
+      <div class="transfer-panel" id="panel-rekening">
+        <div class="bank-card">
+          <p class="rekening-label">Transfer ke rekening BSI</p>
+          <p class="rekening-number" id="rekening-number-display">GANTI_NOMOR_REKENING</p>
+          <p class="rekening-label">a.n. Masjid Al-Falah Dok VIII Atas</p>
+          <button class="btn-copy" onclick="copyRekening()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Salin nomor rekening
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="showScreen('screen-proof')" style="margin-top:24px;">
+        Sudah transfer, lanjutkan
+      </button>
+    </div>
+
+    <!-- ============ SCREEN 6: KIRIM BUKTI TRANSFER ============ -->
+    <div id="screen-proof" class="screen">
+      <button class="btn-back" onclick="showScreen('screen-transfer')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Kembali
+      </button>
+      <p class="section-label" style="font-size:18px; font-weight:700; color:var(--charcoal); margin-bottom:4px;">Kirim Bukti Transfer</p>
+      <p class="section-label" style="margin-bottom:20px;">Donasi <span id="proof-category-display">Infaq</span> — Rp <span id="proof-amount-display">0</span></p>
+
+      <div class="form-group">
+        <label for="proof-file-input">Screenshot / foto bukti transfer</label>
+        <div class="upload-box" id="upload-box" onclick="document.getElementById('proof-file-input').click()">
+          <div id="upload-placeholder">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+            <p>Ketuk untuk pilih foto bukti transfer</p>
+          </div>
+          <img id="upload-preview-img" class="upload-preview" style="display:none;">
+          <p class="upload-filename" id="upload-filename" style="display:none;"></p>
+        </div>
+        <input type="file" id="proof-file-input" accept="image/*" style="display:none;" onchange="handleProofFileSelect(event)">
+      </div>
+
+      <div class="form-group">
+        <label for="donor-name-input">Nama pengirim (opsional)</label>
+        <input type="text" class="form-input" id="donor-name-input" placeholder="Nama Anda">
+        <button class="btn-ghost-small" onclick="fillAsHambaAllah()" type="button">Kirim sebagai "Hamba Allah"</button>
+        <p class="field-note">Nama Anda baru tampil di halaman transparansi setelah donasi diverifikasi. Kosongkan atau pilih "Hamba Allah" bila tidak ingin dicantumkan.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="donor-phone-input">Nomor WhatsApp (opsional, untuk konfirmasi)</label>
+        <input type="tel" class="form-input" id="donor-phone-input" placeholder="08xxxxxxxxxx">
+        <p class="field-note">Hanya dilihat Bendahara. Tidak pernah ditampilkan di halaman publik.</p>
+      </div>
+
+      <button class="btn-primary" id="submit-proof-btn" onclick="submitProof()" disabled>
+        Kirim Bukti Transfer
+      </button>
+    </div>
+
+    <!-- ============ SCREEN 7: MENUNGGU VERIFIKASI ============ -->
+    <div id="screen-pending" class="screen">
+      <div class="success-wrap">
+        <div class="pending-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <p class="success-title">Bukti transfer diterima</p>
+        <p class="success-sub">Terima kasih! Bendahara akan memverifikasi donasi Anda secepatnya setelah mencocokkan dengan mutasi rekening. Jazakumullahu khairan.</p>
+        <button class="btn-primary" onclick="goBeranda()" style="max-width:280px; margin:0 auto;">Kembali ke beranda</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ========================================
+// KONFIGURASI — EDIT BAGIAN INI
+// ========================================
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz0axxRn_NZ_OKLJzsjlBpc4NbBiLxWGI6fZT786SJjJ5SKCXXrA6itTBwSxrs_JvI/exec'; // WAJIB: URL web app berakhiran /exec
+const ZAKAT_WHATSAPP_NUMBER = 'GANTI_NOMOR_WA_AMIL';   // GANTI: nomor WhatsApp Amil (format 62xxx, tanpa +/0)
+const REKENING_BSI_NOMOR = 'GANTI_NOMOR_REKENING'; // GANTI: nomor rekening BSI masjid
+const QRIS_IMAGE_URL = 'GANTI_DENGAN_URL_GAMBAR_QRIS'; // GANTI: URL gambar QRIS statis BSI (kosongkan/biarkan jika belum ada)
+
+const AMOUNT_PRESETS = [25000, 50000, 100000, 200000];
+const MAULID_PRESETS = [500000, 1000000, 2500000, 5000000, 10000000];
+const MIN_AMOUNT = 1000;
+const MAX_BASE_AMOUNT = 49999000;   // + kode unik (maks 999) harus <= batas server Rp 50.000.000
+const MAX_PROOF_FILE_SIZE_MB = 15;  // batas file asli sebelum dikompres
+const MAX_BASE64_CHARS = 6900000;   // batas server ~7.000.000 karakter
+const TIMEZONE = 'Asia/Jayapura';
+
+// ========================================
+// ALAT BANTU
+// ========================================
+const $ = (id) => document.getElementById(id);
+const isPlaceholder = (v) => !v || String(v).indexOf('GANTI') === 0;
+
+function h(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined && text !== null) e.textContent = text;   // textContent: aman dari XSS
+  return e;
+}
+function rp(n) {
+  const v = Math.round(Number(n) || 0);
+  return (v < 0 ? '-' : '') + 'Rp ' + Math.abs(v).toLocaleString('id-ID');
+}
+function fmtDate(iso, withTime) {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '-';
+  const o = { day: 'numeric', month: 'short', year: 'numeric', timeZone: TIMEZONE };
+  if (withTime) { o.hour = '2-digit'; o.minute = '2-digit'; }
+  return d.toLocaleDateString('id-ID', o) + (withTime ? ' WIT' : '');
+}
+function checkUrl() {
+  if (isPlaceholder(APPS_SCRIPT_URL)) throw new Error('Alamat server (APPS_SCRIPT_URL) belum diisi di index.html');
+}
+async function apiGet(action, params) {
+  checkUrl();
+  const qs = new URLSearchParams(Object.assign({ action: action }, params || {}));
+  const res = await fetch(APPS_SCRIPT_URL + '?' + qs.toString(), { cache: 'no-store' });
+  return res.json();
+}
+async function apiPost(action, payload) {
+  checkUrl();
+  // Tanpa header Content-Type => "text/plain": request sederhana, tidak memicu preflight CORS.
+  const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(Object.assign({ action: action }, payload || {})) });
+  return res.json();
+}
+
+// ========================================
+// STATE
+// ========================================
+let currentCategory = '';
+let currentCategoryLabel = '';
+let currentAmount = 0;          // nominal DASAR pilihan donatur (belum + kode unik)
+let isMaulid = false;
+let reservation = null;         // { id, category, base, code, total, expiresAt }
+let proofFileBase64 = null;
+let proofFileMimeType = null;
+let proofFileName = null;
+
+// ========================================
+// NAVIGASI
+// ========================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo(0, 0);
+  if (id === 'screen-beranda') { renderResume(); loadBeranda(false); }
+}
+function goBeranda() { showScreen('screen-beranda'); loadBeranda(true); }
+
+function openAmountScreen(category, label) {
+  currentCategory = category;
+  currentCategoryLabel = label;
+  isMaulid = false;
+  currentAmount = 0;
+  $('amount-category-label').textContent = label;
+  renderAmountGrid('amount-grid', AMOUNT_PRESETS, false);
+  $('custom-amount').value = '';
+  $('pay-btn-standard').disabled = true;
+  showScreen('screen-amount');
+}
+
+// ========================================
+// BERANDA PUBLIK
+// ========================================
+let berandaLoadedAt = 0;
+let historyType = 'income';
+let historyOffset = 0;
+let historyHasMore = false;
+let historyLoading = false;
+
+function setBerandaError(msg) {
+  const box = $('b-error');
+  if (msg) { $('b-error-text').textContent = msg; box.style.display = 'block'; }
+  else { box.style.display = 'none'; }
+}
+
+async function loadBeranda(force) {
+  if (!force && Date.now() - berandaLoadedAt < 60000) return;
+  setBerandaError('');
+  try {
+    const d = await apiGet('getPublicOverview');
+    if (!d || !d.success) throw new Error((d && d.message) || 'Data belum dapat dimuat.');
+    renderOverview(d);
+    berandaLoadedAt = Date.now();
+    resetHistory();
+    loadHistory(true);
+  } catch (e) {
+    $('b-saldo').textContent = '–';
+    setBerandaError('Data transparansi belum dapat dimuat. ' + (e && e.message ? e.message : '') + ' Periksa koneksi internet lalu coba lagi.');
+  }
+}
+
+function renderOverview(d) {
+  const s = d.summary || {};
+  $('b-saldo').textContent = rp(s.saldo);
+  $('b-updated').textContent = 'Diperbarui ' + fmtDate(d.updatedAt, true);
+  $('b-in').textContent = rp(s.totalPemasukan);
+  $('b-out').textContent = rp(s.totalPengeluaran);
+  $('b-saldoawal').textContent = s.saldoAwalTanggal
+    ? 'Termasuk Saldo Awal ' + rp(s.saldoAwal) + ' per ' + fmtDate(s.saldoAwalTanggal)
+    : 'Saldo Awal belum dicatat oleh Bendahara.';
+
+  const pn = $('b-pending');
+  if (s.pendingCount > 0) {
+    pn.textContent = s.pendingCount + ' donasi senilai ' + rp(s.pendingTotal) + ' sedang menunggu verifikasi Bendahara dan belum dihitung dalam saldo.';
+    pn.style.display = '';
+  } else {
+    pn.style.display = 'none';
+  }
+  renderRekon(d.rekonsiliasi);
+  renderCatBars($('b-incat'), d.incomeByCategory || [], 'in');
+  renderCatBars($('b-outcat'), d.expenseByCategory || [], 'out');
+}
+
+function renderCatBars(box, list, cls) {
+  box.textContent = '';
+  if (!list.length) { box.appendChild(h('p', 'empty-note', 'Belum ada data')); return; }
+  const max = Math.max.apply(null, list.map(x => x.total)) || 1;
+  list.forEach(x => {
+    const row = h('div', 'bar-row');
+    const top = h('div', 'bar-top');
+    top.appendChild(h('span', 'bar-name', x.kategori));
+    top.appendChild(h('span', 'bar-val', rp(x.total)));
+    const track = h('div', 'bar-track');
+    const fill = h('div', 'bar-fill ' + cls);
+    fill.style.width = Math.max(4, (x.total / max) * 100) + '%';
+    track.appendChild(fill);
+    row.appendChild(top);
+    row.appendChild(track);
+    box.appendChild(row);
+  });
+}
+
+function kv(label, value, strong) {
+  const r = h('div', 'kv-row' + (strong ? ' strong' : ''));
+  r.appendChild(h('span', '', label));
+  r.appendChild(h('span', '', value));
+  return r;
+}
+
+function renderRekon(r) {
+  const box = $('b-rekon');
+  box.textContent = '';
+  if (!r) { box.style.display = 'none'; return; }
+  box.style.display = '';
+  const card = h('div', 'rekon-card');
+  card.appendChild(h('p', 'rekon-title', 'Pencocokan dengan Rekening Bank'));
+  card.appendChild(h('p', 'rekon-sub', 'Saldo per ' + fmtDate(r.tanggal) + ' · dicatat Bendahara ' + fmtDate(r.dicatatPada)));
+  card.appendChild(kv('Saldo rekening BSI', rp(r.saldoBank)));
+  if (r.kasTunai > 0) card.appendChild(kv('Kas tunai di tangan pengurus', rp(r.kasTunai)));
+  card.appendChild(kv('Total uang riil', rp(r.saldoBank + r.kasTunai), true));
+  card.appendChild(kv('Saldo buku (per tanggal itu)', rp(r.saldoBuku)));
+  if (r.pendingTotal > 0) card.appendChild(kv('Donasi menunggu verifikasi', rp(r.pendingTotal)));
+  const st = h('div', 'rekon-status ' + (r.sesuai ? 'ok' : 'warn'));
+  if (r.sesuai) {
+    st.textContent = 'Sesuai: seluruh uang riil sudah terjelaskan oleh catatan pembukuan.';
+  } else {
+    const dir = r.selisihBelumTerjelaskan > 0 ? 'uang riil lebih besar dari catatan' : 'catatan lebih besar dari uang riil';
+    st.textContent = 'Ada selisih belum terjelaskan ' + rp(Math.abs(r.selisihBelumTerjelaskan)) + ' (' + dir + ').';
+  }
+  card.appendChild(st);
+  if (r.catatan) card.appendChild(h('p', 'rekon-note', 'Catatan: ' + r.catatan));
+  box.appendChild(card);
+}
+
+function resetHistory() {
+  historyOffset = 0;
+  historyHasMore = false;
+  $('h-list').textContent = '';
+  $('h-more').style.display = 'none';
+}
+
+function switchHistory(type) {
+  if (type === historyType) return;
+  historyType = type;
+  $('h-tab-income').classList.toggle('active', type === 'income');
+  $('h-tab-expense').classList.toggle('active', type === 'expense');
+  resetHistory();
+  loadHistory(true);
+}
+
+async function loadHistory(first) {
+  if (historyLoading) return;
+  historyLoading = true;
+  const type = historyType;
+  const more = $('h-more');
+  more.disabled = true;
+  try {
+    const d = await apiGet('getPublicHistory', { type: type, offset: historyOffset });
+    if (type !== historyType) return;   // pengguna sudah pindah tab
+    if (!d || !d.success) throw new Error((d && d.message) || 'Gagal memuat riwayat');
+    const list = $('h-list');
+    if (first && d.items.length === 0) {
+      list.appendChild(h('p', 'empty-note', type === 'income' ? 'Belum ada pemasukan tercatat' : 'Belum ada pengeluaran tercatat'));
+    }
+    d.items.forEach(it => list.appendChild(renderHistoryItem(it, type)));
+    historyOffset = d.nextOffset;
+    historyHasMore = d.hasMore;
+    more.style.display = historyHasMore ? '' : 'none';
+  } catch (e) {
+    if (type === historyType) $('h-list').appendChild(h('p', 'empty-note', 'Riwayat belum dapat dimuat. Tekan "Muat ulang data".'));
+  } finally {
+    historyLoading = false;
+    more.disabled = false;
+  }
+}
+
+function renderHistoryItem(it, type) {
+  const row = h('div', 'h-item');
+  const main = h('div', 'h-main');
+  const income = type === 'income';
+  main.appendChild(h('p', 'h-name', income ? it.nama : it.keterangan));
+  const parts = [it.kategori];
+  if (!income && it.penerima && it.penerima !== '-') parts.push('untuk ' + it.penerima);
+  parts.push(fmtDate(it.tanggal));
+  main.appendChild(h('p', 'h-meta', parts.join(' · ')));
+  const pendingStatus = income ? 'Menunggu Verifikasi' : 'Direncanakan';
+  if (it.status === pendingStatus) main.appendChild(h('span', 'badge', income ? 'Menunggu verifikasi' : 'Direncanakan, belum dibayar'));
+  row.appendChild(main);
+  row.appendChild(h('p', 'h-amount ' + (income ? 'in' : 'out'), (income ? '+' : '-') + rp(it.nominal)));
+  return row;
+}
+
+// ========================================
+// RENDER TOMBOL NOMINAL
+// ========================================
+function renderAmountGrid(gridId, presets, maulid) {
+  const grid = $(gridId);
+  grid.innerHTML = '';
+  presets.forEach(amount => {
+    const btn = document.createElement('button');
+    btn.className = 'amount-btn';
+    btn.textContent = 'Rp ' + amount.toLocaleString('id-ID');
+    btn.onclick = () => selectPresetAmount(amount, maulid, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function selectPresetAmount(amount, maulid, btnEl) {
+  currentAmount = amount;
+  isMaulid = maulid;
+  const gridId = maulid ? 'maulid-amount-grid' : 'amount-grid';
+  document.querySelectorAll('#' + gridId + ' .amount-btn').forEach(b => b.classList.remove('selected'));
+  btnEl.classList.add('selected');
+  $(maulid ? 'maulid-custom-amount' : 'custom-amount').value = '';
+  $(maulid ? 'pay-btn-maulid' : 'pay-btn-standard').disabled = false;
+}
+
+function selectCustomAmount(value, maulid) {
+  const amount = parseInt(value, 10);
+  isMaulid = !!maulid;
+  currentAmount = amount > 0 ? amount : 0;
+  const gridId = maulid ? 'maulid-amount-grid' : 'amount-grid';
+  document.querySelectorAll('#' + gridId + ' .amount-btn').forEach(b => b.classList.remove('selected'));
+  $(maulid ? 'pay-btn-maulid' : 'pay-btn-standard').disabled = currentAmount <= 0;
+}
+
+renderAmountGrid('maulid-amount-grid', MAULID_PRESETS, true);
+
+function toggleFaq(btn) { btn.parentElement.classList.toggle('open'); }
+
+function openWhatsApp() {
+  if (isPlaceholder(ZAKAT_WHATSAPP_NUMBER)) {
+    alert('Nomor WhatsApp Amil belum diisi pengurus. Silakan hubungi pengurus masjid secara langsung.');
+    return;
+  }
+  const msg = encodeURIComponent('Assalamualaikum, saya ingin menunaikan zakat melalui Masjid Al-Falah.');
+  window.location.href = 'https://wa.me/' + ZAKAT_WHATSAPP_NUMBER + '?text=' + msg;
+}
+
+// ========================================
+// LANGKAH 1: MINTA NOMINAL TRANSFER (nominal + kode unik)
+// ========================================
+function reservationUsable() {
+  return reservation && reservation.category === currentCategory && reservation.base === currentAmount
+    && reservation.expiresAt > Date.now() + 10 * 60000;   // sisa waktu minimal 10 menit
+}
+
+async function startPayment() {
+  if (isMaulid) { currentCategory = 'maulid-nabi'; currentCategoryLabel = 'Maulid Nabi SAW'; }
+  if (currentAmount < MIN_AMOUNT) { alert('Nominal donasi minimal Rp 1.000.'); return; }
+  if (currentAmount > MAX_BASE_AMOUNT) { alert('Untuk donasi di atas Rp ' + MAX_BASE_AMOUNT.toLocaleString('id-ID') + ' silakan hubungi pengurus masjid.'); return; }
+
+  const btns = [$('pay-btn-standard'), $('pay-btn-maulid')];
+  const original = btns.map(b => b.innerHTML);
+  const wasDisabled = btns.map(b => b.disabled);
+  btns.forEach(b => { b.disabled = true; b.textContent = 'Menyiapkan nominal…'; });
+  try {
+    if (!reservationUsable()) {
+      const d = await apiPost('reserveDonationAmount', { category: currentCategory, baseAmount: currentAmount });
+      if (!d || !d.success) throw new Error((d && d.message) || 'Gagal menyiapkan nominal transfer');
+      reservation = {
+        id: d.reservationId, category: currentCategory, base: d.baseAmount,
+        code: d.kodeUnik, total: d.totalAmount, expiresAt: Date.now() + d.berlakuMenit * 60000
+      };
+    }
+    saveResume();
+    fillTransferScreen();
+    resetProofForm();
+    showScreen('screen-transfer');
+  } catch (e) {
+    alert((e && e.message) ? e.message : 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda, lalu coba lagi.');
+  } finally {
+    btns.forEach((b, i) => { b.innerHTML = original[i]; b.disabled = wasDisabled[i]; });
+  }
+}
+
+function fillTransferScreen() {
+  const total = reservation.total.toLocaleString('id-ID');
+  $('transfer-amount-display').textContent = 'Rp ' + total;
+  $('transfer-breakdown').textContent = 'Rp ' + reservation.base.toLocaleString('id-ID') + ' + kode unik ' + reservation.code;
+  $('transfer-amount-warning').textContent = total;
+  $('transfer-category-display').textContent = currentCategoryLabel;
+  $('proof-category-display').textContent = currentCategoryLabel;
+  $('proof-amount-display').textContent = total;
+  $('rekening-number-display').textContent = isPlaceholder(REKENING_BSI_NOMOR) ? 'Belum tersedia' : REKENING_BSI_NOMOR;
+  $('transfer-setup-warning').style.display = (isPlaceholder(REKENING_BSI_NOMOR) && isPlaceholder(QRIS_IMAGE_URL)) ? '' : 'none';
+
+  const hasQris = !isPlaceholder(QRIS_IMAGE_URL);
+  $('tab-qris').style.display = hasQris ? '' : 'none';
+  if (hasQris) $('qris-static-image').src = QRIS_IMAGE_URL;
+  switchTransferTab(hasQris ? 'qris' : 'rekening');
+}
+
+function switchTransferTab(tab) {
+  $('tab-qris').classList.toggle('active', tab === 'qris');
+  $('tab-rekening').classList.toggle('active', tab === 'rekening');
+  $('panel-qris').classList.toggle('active', tab === 'qris');
+  $('panel-rekening').classList.toggle('active', tab === 'rekening');
+}
+
+function copyRekening() {
+  if (isPlaceholder(REKENING_BSI_NOMOR)) { alert('Nomor rekening belum diisi pengurus.'); return; }
+  navigator.clipboard.writeText(REKENING_BSI_NOMOR).then(() => {
+    alert('Nomor rekening disalin: ' + REKENING_BSI_NOMOR);
+  }).catch(() => {
+    alert('Nomor rekening: ' + REKENING_BSI_NOMOR);
+  });
+}
+
+// ========================================
+// LANGKAH 2: KIRIM BUKTI TRANSFER
+// ========================================
+function resetProofForm() {
+  proofFileBase64 = null; proofFileMimeType = null; proofFileName = null;
+  $('proof-file-input').value = '';
+  $('upload-placeholder').style.display = '';
+  $('upload-preview-img').style.display = 'none';
+  $('upload-filename').style.display = 'none';
+  $('upload-box').classList.remove('has-file');
+  $('donor-name-input').value = '';
+  $('donor-phone-input').value = '';
+  updateSubmitButtonState();
+}
+
+function fillAsHambaAllah() { $('donor-name-input').value = 'Hamba Allah'; }
+
+function readAsDataURL(blobOrFile) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = () => reject(new Error('Gagal membaca file'));
+    r.readAsDataURL(blobOrFile);
+  });
+}
+
+// Foto HP bisa 3-8 MB: kecilkan ke maks 1600 px (JPEG) supaya cepat terkirim lewat 4G.
+// Jika browser tidak bisa membaca formatnya (mis. HEIC), kirim file aslinya.
+async function prepareProof(file) {
+  try {
+    const bmp = await createImageBitmap(file);
+    const scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(bmp.width * scale));
+    c.height = Math.max(1, Math.round(bmp.height * scale));
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    return { dataUri: c.toDataURL('image/jpeg', 0.82), mime: 'image/jpeg', name: file.name.replace(/\.[^.]+$/, '') + '.jpg' };
+  } catch (e) {
+    return { dataUri: await readAsDataURL(file), mime: file.type, name: file.name };
+  }
+}
+
+async function handleProofFileSelect(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { alert('File harus berupa gambar (screenshot/foto).'); return; }
+  if (file.size > MAX_PROOF_FILE_SIZE_MB * 1024 * 1024) {
+    alert('Ukuran file maksimal ' + MAX_PROOF_FILE_SIZE_MB + ' MB. Silakan screenshot ulang.');
+    return;
+  }
+  try {
+    const p = await prepareProof(file);
+    const b64 = p.dataUri.split(',')[1] || '';
+    if (!b64 || b64.length > MAX_BASE64_CHARS) { alert('Gambar terlalu besar. Silakan screenshot ulang bukti transfer.'); return; }
+    proofFileBase64 = b64;
+    proofFileMimeType = p.mime;
+    proofFileName = p.name;
+    $('upload-placeholder').style.display = 'none';
+    const img = $('upload-preview-img');
+    img.src = p.dataUri;
+    img.style.display = 'block';
+    $('upload-filename').textContent = p.name;
+    $('upload-filename').style.display = 'block';
+    $('upload-box').classList.add('has-file');
+    updateSubmitButtonState();
+  } catch (e) {
+    alert('Gambar tidak dapat dibaca. Coba pilih file lain.');
+  }
+}
+
+function updateSubmitButtonState() { $('submit-proof-btn').disabled = !proofFileBase64; }
+
+async function submitProof() {
+  if (!proofFileBase64) { alert('Silakan lampirkan foto bukti transfer terlebih dahulu.'); return; }
+  if (!reservation) { alert('Sesi nominal transfer berakhir. Silakan ulangi dari pilihan nominal.'); showScreen('screen-home'); return; }
+
+  const btn = $('submit-proof-btn');
+  btn.disabled = true;
+  btn.textContent = 'Mengirim…';
+  try {
+    const d = await apiPost('submitDonationProof', {
+      category: currentCategory,
+      amount: reservation.total,
+      reservationId: reservation.id,
+      donorName: $('donor-name-input').value.trim(),
+      donorPhone: $('donor-phone-input').value.trim(),
+      proofBase64: proofFileBase64,
+      proofMimeType: proofFileMimeType,
+      proofFileName: proofFileName
+    });
+    if (d && d.success) {
+      reservation = null;
+      clearResume();
+      berandaLoadedAt = 0;
+      showScreen('screen-pending');
+    } else {
+      alert('Gagal mengirim bukti transfer: ' + ((d && d.message) || 'Terjadi kesalahan'));
+      btn.disabled = false;
+      btn.textContent = 'Kirim Bukti Transfer';
+    }
+  } catch (e) {
+    alert('Tidak dapat terhubung ke server. Periksa koneksi internet Anda, lalu coba lagi.');
+    btn.disabled = false;
+    btn.textContent = 'Kirim Bukti Transfer';
+  }
+}
+
+// ========================================
+// LANJUTKAN DONASI YANG BELUM SELESAI
+// ========================================
+// Donatur sering pindah ke aplikasi bank/e-wallet untuk membayar; browser bisa memuat ulang
+// halaman saat ia kembali. Nominal + kode unik disimpan di HP donatur (bukan di server) agar
+// bisa dilanjutkan tanpa membuat kode baru yang tidak cocok dengan transfernya.
+const RESUME_KEY = 'alfalah_resume_v1';
+function saveResume() {
+  try {
+    if (reservation) localStorage.setItem(RESUME_KEY, JSON.stringify({ reservation: reservation, label: currentCategoryLabel }));
+  } catch (e) { /* mode privat/penyimpanan dinonaktifkan: abaikan */ }
+}
+function readResume() {
+  try {
+    const r = JSON.parse(localStorage.getItem(RESUME_KEY) || 'null');
+    if (r && r.reservation && r.reservation.expiresAt > Date.now()) return r;
+    if (r) localStorage.removeItem(RESUME_KEY);
+  } catch (e) { /* abaikan */ }
+  return null;
+}
+function clearResume() { try { localStorage.removeItem(RESUME_KEY); } catch (e) { /* abaikan */ } }
+function renderResume() {
+  const r = readResume();
+  const box = $('b-resume');
+  if (!r) { box.style.display = 'none'; return; }
+  $('b-resume-text').textContent = 'Nominal transfer ' + rp(r.reservation.total) + ' untuk ' + r.label + '. Jika Anda sudah mentransfer, lanjutkan untuk mengirim bukti transfer.';
+  box.style.display = '';
+}
+function resumeDonation() {
+  const r = readResume();
+  if (!r) { renderResume(); return; }
+  reservation = r.reservation;
+  currentCategory = reservation.category;
+  currentCategoryLabel = r.label;
+  currentAmount = reservation.base;
+  isMaulid = reservation.category === 'maulid-nabi';
+  fillTransferScreen();
+  resetProofForm();
+  showScreen('screen-transfer');
+}
+function discardResume() {
+  if (!confirm('Batalkan donasi ini? Jika Anda sudah terlanjur mentransfer, jangan dibatalkan: kirim bukti transfernya.')) return;
+  clearResume();
+  reservation = null;
+  renderResume();
+}
+
+function sharePage() {
+  const url = location.href.split('#')[0];
+  const text = 'Lihat transparansi keuangan dan donasi Masjid Al-Falah:';
+  if (navigator.share) {
+    navigator.share({ title: 'Masjid Al-Falah — Transparansi dan Donasi', text: text, url: url }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => alert('Tautan disalin: ' + url)).catch(() => alert(url));
+  } else { alert(url); }
+}
+
+// Kembali dari aplikasi lain / tab lama dibuka lagi: segarkan data bila sudah basi (>60 dtk).
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && $('screen-beranda').classList.contains('active')) loadBeranda(false);
+});
+
+// ========================================
+// MULAI
+// ========================================
+renderResume();
+loadBeranda(true);
+</script>
+
+</body>
+</html>

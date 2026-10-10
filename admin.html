@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kelola Keuangan — Masjid Al-Falah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal-deep: #16423C;
+    --teal-deeper: #0F332E;
+    --ivory: #FAF6EC;
+    --brass: #A67C42;
+    --brass-light: #C9A876;
+    --charcoal: #2A2622;
+    --sage-light: #E8EDE2;
+    --border-soft: #DDD4C0;
+    --white: #FFFFFF;
+    --income: #2D6A4F;
+    --expense: #A6402F;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--ivory);
+    color: var(--charcoal);
+    min-height: 100vh;
+  }
+
+  .app {
+    max-width: 520px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--ivory);
+  }
+
+  .header {
+    background: var(--teal-deep);
+    color: var(--ivory);
+    padding: 26px 24px 22px;
+    text-align: center;
+  }
+
+  .header p { margin: 0; }
+  .header .title { font-size: 20px; font-weight: 800; }
+  .header .sub { font-size: 13.5px; color: var(--brass-light); margin-top: 3px; }
+
+  .body-content { padding: 24px 20px 60px; }
+
+  /* ===== PIN SCREEN ===== */
+  .pin-wrap {
+    text-align: center;
+    padding: 40px 10px;
+  }
+
+  .pin-input {
+    width: 100%;
+    max-width: 220px;
+    padding: 18px;
+    font-size: 26px;
+    letter-spacing: 8px;
+    text-align: center;
+    font-weight: 700;
+    border: 1.5px solid var(--border-soft);
+    border-radius: 12px;
+    margin: 20px 0;
+    font-family: inherit;
+  }
+
+  .error-text {
+    color: var(--expense);
+    font-size: 14px;
+    margin-top: 8px;
+    min-height: 18px;
+  }
+
+  /* ===== BALANCE CARD ===== */
+  .balance-card {
+    background: linear-gradient(135deg, var(--teal-deep), var(--teal-deeper));
+    color: var(--ivory);
+    border-radius: var(--radius);
+    padding: 24px 22px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .balance-label {
+    font-size: 13.5px;
+    color: var(--brass-light);
+    margin: 0 0 6px;
+    font-weight: 600;
+  }
+
+  .balance-amount {
+    font-size: 30px;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  /* ===== ACTION BUTTONS ===== */
+  .action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 8px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border-soft);
+    background: var(--white);
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--charcoal);
+  }
+
+  .action-btn.income { border-color: var(--income); color: var(--income); }
+  .action-btn.expense { border-color: var(--expense); color: var(--expense); }
+  .action-btn.report { grid-column: span 2; flex-direction: row; justify-content: center; background: var(--sage-light); border-color: var(--teal-deep); color: var(--teal-deep); }
+
+  /* ===== LEDGER LIST ===== */
+  .section-label {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 4px 4px 12px;
+  }
+
+  .ledger-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--white);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+
+  .ledger-desc { font-size: 14.5px; font-weight: 600; margin: 0; }
+  .ledger-date { font-size: 12.5px; color: #8A8375; margin: 2px 0 0; }
+  .ledger-amount { font-size: 15px; font-weight: 700; white-space: nowrap; }
+  .ledger-amount.in { color: var(--income); }
+  .ledger-amount.out { color: var(--expense); }
+
+  .empty-note {
+    text-align: center;
+    color: #8A8375;
+    font-size: 14px;
+    padding: 30px 10px;
+  }
+
+  /* ===== MODAL FORM ===== */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 18, 14, 0.45);
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 10;
+  }
+
+  .overlay.active { display: flex; }
+
+  .sheet {
+    background: var(--ivory);
+    width: 100%;
+    max-width: 520px;
+    border-radius: 20px 20px 0 0;
+    padding: 24px 20px 28px;
+  }
+
+  .sheet h3 { margin: 0 0 18px; font-size: 18px; }
+
+  .form-label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #6B6459;
+    margin-bottom: 6px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-family: inherit;
+    border: 1.5px solid var(--border-soft);
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--teal-deep);
+    color: var(--ivory);
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .btn-secondary {
+    width: 100%;
+    background: none;
+    border: none;
+    color: #8A8375;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  /* ===== REPORT VIEW ===== */
+  .report-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 4px;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 14px;
+  }
+
+  .report-row.total { font-weight: 800; border-bottom: none; font-size: 15px; }
+  .report-section-title {
+    font-weight: 700;
+    margin: 18px 0 6px;
+    font-size: 14.5px;
+    color: var(--teal-deep);
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ===== PENDING VERIFICATION CARD ===== */
+  .pending-card {
+    background: #FFF4E0;
+    border: 1.5px solid #D6A954;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .pending-card-label { font-size: 13px; color: #8A6416; font-weight: 600; margin: 0 0 4px; }
+  .pending-card-amount { font-size: 20px; font-weight: 800; color: #6B4E0F; margin: 0; }
+  .pending-card-arrow { color: #8A6416; }
+
+  /* ===== VERIFICATION QUEUE ITEM ===== */
+  .verif-item {
+    background: var(--white);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+
+  .verif-item-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .verif-item-cat { font-size: 14px; font-weight: 700; margin: 0; }
+  .verif-item-date { font-size: 12px; color: #8A8375; margin: 2px 0 0; }
+  .verif-item-amount { font-size: 18px; font-weight: 800; color: var(--teal-deep); margin: 0; }
+
+  .verif-item-donor {
+    font-size: 13.5px;
+    color: #6B6459;
+    margin: 0 0 12px;
+  }
+
+  .verif-proof-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--sage-light);
+    color: var(--teal-deep);
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13.5px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .verif-action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .btn-confirm {
+    background: var(--income);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .btn-reject {
+    background: var(--white);
+    color: var(--expense);
+    border: 1.5px solid var(--expense);
+    border-radius: 10px;
+    padding: 12px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* ===== TAMBAHAN v2.1 ===== */
+  .sheet { max-height: 92vh; overflow-y: auto; }
+  .banner { border-radius: 12px; padding: 12px 14px; font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
+  .banner.warn { background: #FCEBDD; color: #8A4A1B; border: 1px solid #EBC7AA; }
+  .banner.info { background: #FFF6E0; color: #6B5320; border: 1px solid #EBD9A8; }
+  .banner ul { margin: 6px 0 0 18px; padding: 0; }
+  .banner .link-btn { margin-top: 6px; }
+  .chip { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 2px 7px; margin: 5px 6px 0 0; }
+  .chip.ok { background: #E3F1E8; color: #1F5A3F; }
+  .chip.warn { background: #FCEBDD; color: #8A4A1B; }
+  .chip.plan { background: #FFF1CC; color: #7A5A12; }
+  .entry-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+  .link-btn { background: none; border: none; padding: 4px 0; font-family: inherit; font-size: 12.5px; font-weight: 700; color: var(--teal-deep); text-decoration: underline; cursor: pointer; }
+  .link-btn.danger { color: var(--expense); }
+  .ledger-item { align-items: flex-start; gap: 12px; }
+  .ledger-main { min-width: 0; flex: 1; }
+  .ledger-desc { word-break: break-word; }
+  .rk-item { background: var(--white); border: 1px solid var(--border-soft); border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; font-size: 13px; line-height: 1.55; }
+  .rk-item strong { font-size: 13.5px; }
+  .rk-bad { color: var(--expense); font-weight: 700; }
+  .rk-good { color: var(--income); font-weight: 700; }
+  .help { font-size: 12px; color: #8A8375; margin: -8px 0 14px; line-height: 1.5; }
+  .result-box { background: var(--white); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; font-size: 14px; line-height: 1.7; margin-bottom: 14px; }
+  .verif-flags { margin: 0 0 10px; }
+  .verif-wa { font-size: 12.5px; margin-left: 6px; }
+  .btn-confirm:disabled, .btn-reject:disabled { opacity: 0.5; }
+  select.form-input { background: var(--white); }
+  @media print {
+    body * { visibility: hidden; }
+    #report-output, #report-output * { visibility: visible; }
+    #report-output { position: absolute; left: 0; top: 0; width: 100%; padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <p class="title">Kelola Keuangan</p>
+    <p class="sub">Masjid Al-Falah — Panel Admin</p>
+  </div>
+
+  <div class="body-content">
+
+    <!-- ============ SCREEN: PIN ============ -->
+    <div id="screen-pin" class="screen active">
+      <div class="pin-wrap">
+        <p style="font-size:15px; color:#6B6459;">Masukkan PIN Admin</p>
+        <input type="password" class="pin-input" id="pin-input" maxlength="64" autocomplete="off" autocapitalize="off" autofocus>
+        <p class="error-text" id="pin-error"></p>
+        <button class="btn-primary" id="pin-btn" style="max-width:220px; margin:0 auto;" onclick="checkPin()">Masuk</button>
+      </div>
+    </div>
+
+    <!-- ============ SCREEN: DASHBOARD ============ -->
+    <div id="screen-dashboard" class="screen">
+      <div class="balance-card">
+        <p class="balance-label">Saldo Buku Saat Ini (Terverifikasi)</p>
+        <p class="balance-amount" id="balance-display">Rp 0</p>
+      </div>
+
+      <div class="banner warn" id="warn-banner" style="display:none;"></div>
+      <div class="banner info" id="saldoawal-banner" style="display:none;">
+        <strong>Saldo Awal belum dicatat.</strong> Tanpa Saldo Awal, saldo buku tidak akan cocok dengan rekening.
+        <br><button class="link-btn" type="button" onclick="openSaldoAwalForm()">Catat Saldo Awal sekarang</button>
+      </div>
+      <div class="banner info" id="planned-banner" style="display:none;"></div>
+
+      <div class="pending-card" id="pending-card" onclick="openVerificationScreen()" style="display:none;">
+        <div>
+          <p class="pending-card-label" id="pending-card-count">Menunggu Verifikasi (0)</p>
+          <p class="pending-card-amount" id="pending-card-amount">Rp 0</p>
+        </div>
+        <svg class="pending-card-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+
+      <div class="action-row">
+        <button class="action-btn income" onclick="openEntryForm('Pemasukan')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Pemasukan
+        </button>
+        <button class="action-btn expense" onclick="openEntryForm('Pengeluaran')">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
+          Pengeluaran
+        </button>
+        <button class="action-btn report" onclick="openBankForm()">Catat Saldo Rekening Bank</button>
+        <button class="action-btn report" onclick="openReportForm()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg>
+          Buat Laporan Periode
+        </button>
+      </div>
+
+      <p class="section-label">Pencocokan dengan bank (terbaru)</p>
+      <div id="rk-list"><p class="empty-note">Memuat data...</p></div>
+
+      <p class="section-label" style="margin-top:22px;">Riwayat Transaksi</p>
+      <input type="search" class="form-input" id="ledger-search" placeholder="Cari transaksi (keterangan, kategori, penerima)…" oninput="ledgerShown = LEDGER_PAGE; applyLedgerView();" style="margin-bottom:12px;">
+      <div id="ledger-list">
+        <p class="empty-note">Memuat data...</p>
+      </div>
+      <button class="btn-secondary" id="ledger-more" onclick="showMoreLedger()" style="display:none;">Tampilkan lebih banyak</button>
+
+      <button class="btn-secondary" style="margin-top:18px;" onclick="logout()">Keluar</button>
+    </div>
+
+    <!-- ============ SCREEN: VERIFIKASI BUKTI TRANSFER ============ -->
+    <div id="screen-verifikasi" class="screen">
+      <button class="btn-secondary" style="text-align:left; padding-left:0;" onclick="showScreen('screen-dashboard')">← Kembali ke dashboard</button>
+      <p class="section-label">Menunggu Verifikasi</p>
+      <p class="help" style="margin-top:-6px;">Cocokkan nominal PERSIS (termasuk kode unik) dengan mutasi rekening sebelum menekan Konfirmasi.</p>
+      <div id="verif-list">
+        <p class="empty-note">Memuat data...</p>
+      </div>
+    </div>
+
+    <!-- ============ SCREEN: LAPORAN ============ -->
+    <div id="screen-report" class="screen">
+      <button class="btn-secondary" style="text-align:left; padding-left:0;" onclick="showScreen('screen-dashboard')">← Kembali ke dashboard</button>
+      <div id="report-output"></div>
+      <button class="btn-primary" style="margin-top:16px;" onclick="window.print()">Cetak / Simpan PDF</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ MODAL: TOLAK BUKTI TRANSFER ============ -->
+<div class="overlay" id="reject-overlay">
+  <div class="sheet">
+    <h3>Tolak Bukti Transfer</h3>
+    <label class="form-label">Alasan (opsional, untuk catatan)</label>
+    <input type="text" class="form-input" id="reject-reason" maxlength="150" placeholder="Contoh: Nominal tidak cocok dengan mutasi">
+    <button class="btn-primary" style="background:var(--expense);" onclick="confirmReject()">Tolak Bukti Ini</button>
+    <button class="btn-secondary" onclick="closeOverlay('reject-overlay')">Batal</button>
+  </div>
+</div>
+
+<!-- ============ MODAL: TAMBAH ENTRI ============ -->
+<div class="overlay" id="entry-overlay">
+  <div class="sheet">
+    <h3 id="entry-title">Tambah Pemasukan</h3>
+    <label class="form-label">Kategori</label>
+    <select class="form-input" id="entry-category"></select>
+    <label class="form-label">Keterangan</label>
+    <input type="text" class="form-input" id="entry-desc" maxlength="120" placeholder="Contoh: Kotak Amal Jumat 24 Juli 2026">
+    <label class="form-label">Nominal (Rp, angka saja)</label>
+    <input type="number" inputmode="numeric" class="form-input" id="entry-amount" placeholder="0" min="1" step="1">
+    <div id="entry-expense-fields" style="display:none;">
+      <label class="form-label">Nama penerima</label>
+      <input type="text" class="form-input" id="entry-recipient" maxlength="60" placeholder="Contoh: PLN, Toko Bangunan Maju">
+      <label class="form-label">Status pembayaran</label>
+      <select class="form-input" id="entry-status" onchange="onEntryStatusChange()">
+        <option value="Sudah Dibayar">Sudah Dibayar</option>
+        <option value="Direncanakan">Direncanakan (belum mengurangi saldo)</option>
+      </select>
+    </div>
+    <div id="entry-date-row">
+      <label class="form-label">Tanggal transaksi</label>
+      <input type="date" class="form-input" id="entry-date">
+      <p class="help">Isi tanggal sebenarnya jika mencatat belakangan. Tidak boleh di masa depan atau sebelum Saldo Awal.</p>
+    </div>
+    <button class="btn-primary" id="entry-save" onclick="submitEntry()">Simpan</button>
+    <button class="btn-secondary" onclick="closeOverlay('entry-overlay')">Batal</button>
+  </div>
+</div>
+
+<!-- ============ MODAL: SALDO AWAL ============ -->
+<div class="overlay" id="saldoawal-overlay">
+  <div class="sheet">
+    <h3>Catat Saldo Awal</h3>
+    <p class="help" style="margin-top:-8px;">Saldo rekening/kas pada hari sistem mulai dipakai. Semua transaksi sebelum tanggal ini dianggap sudah termasuk di dalamnya. Hanya bisa dicatat sekali.</p>
+    <label class="form-label">Tanggal Saldo Awal</label>
+    <input type="date" class="form-input" id="sa-date">
+    <label class="form-label">Nominal (Rp, angka saja)</label>
+    <input type="number" inputmode="numeric" class="form-input" id="sa-amount" placeholder="0" min="1" step="1">
+    <button class="btn-primary" id="sa-save" onclick="submitSaldoAwal()">Simpan Saldo Awal</button>
+    <button class="btn-secondary" onclick="closeOverlay('saldoawal-overlay')">Batal</button>
+  </div>
+</div>
+
+<!-- ============ MODAL: SALDO REKENING BANK ============ -->
+<div class="overlay" id="bank-overlay">
+  <div class="sheet">
+    <h3>Catat Saldo Rekening Bank</h3>
+    <div id="bank-form">
+      <p class="help" style="margin-top:-8px;">Salin dari mutasi/buku rekening BSI. Sistem membandingkannya dengan saldo buku pada tanggal yang sama dan hasilnya tampil di halaman publik.</p>
+      <label class="form-label">Tanggal saldo</label>
+      <input type="date" class="form-input" id="bank-date">
+      <label class="form-label">Saldo rekening BSI (Rp, angka saja)</label>
+      <input type="number" inputmode="numeric" class="form-input" id="bank-amount" placeholder="0" min="0" step="1">
+      <label class="form-label">Kas tunai di tangan pengurus (Rp, kosongkan jika 0)</label>
+      <input type="number" inputmode="numeric" class="form-input" id="bank-cash" placeholder="0" min="0" step="1">
+      <label class="form-label">Catatan (opsional, tampil publik)</label>
+      <input type="text" class="form-input" id="bank-note" maxlength="150" placeholder="Contoh: Cocok dengan mutasi s.d. 30 September">
+      <button class="btn-primary" id="bank-save" onclick="submitBank()">Simpan &amp; Bandingkan</button>
+      <button class="btn-secondary" onclick="closeOverlay('bank-overlay')">Batal</button>
+    </div>
+    <div id="bank-result" style="display:none;">
+      <div class="result-box" id="bank-result-text"></div>
+      <button class="btn-primary" onclick="closeOverlay('bank-overlay')">Selesai</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: BATALKAN ENTRI ============ -->
+<div class="overlay" id="void-overlay">
+  <div class="sheet">
+    <h3>Batalkan Entri</h3>
+    <p class="help" id="void-info" style="margin-top:-8px;"></p>
+    <label class="form-label">Alasan pembatalan</label>
+    <input type="text" class="form-input" id="void-reason" maxlength="100" placeholder="Contoh: salah ketik nominal">
+    <button class="btn-primary" style="background:var(--expense);" id="void-save" onclick="submitVoid()">Batalkan Entri</button>
+    <button class="btn-secondary" onclick="closeOverlay('void-overlay')">Kembali</button>
+  </div>
+</div>
+
+<!-- ============ MODAL: TANDAI DIBAYAR ============ -->
+<div class="overlay" id="pay-overlay">
+  <div class="sheet">
+    <h3>Tandai Sudah Dibayar</h3>
+    <p class="help" id="pay-info" style="margin-top:-8px;"></p>
+    <label class="form-label">Tanggal pembayaran</label>
+    <input type="date" class="form-input" id="pay-date">
+    <button class="btn-primary" id="pay-save" onclick="submitPay()">Tandai Dibayar</button>
+    <button class="btn-secondary" onclick="closeOverlay('pay-overlay')">Batal</button>
+  </div>
+</div>
+
+<!-- ============ MODAL: PILIH PERIODE ============ -->
+<div class="overlay" id="report-overlay">
+  <div class="sheet">
+    <h3>Buat Laporan Periode</h3>
+    <label class="form-label">Dari tanggal</label>
+    <input type="date" class="form-input" id="report-start">
+    <label class="form-label">Sampai tanggal</label>
+    <input type="date" class="form-input" id="report-end">
+    <button class="btn-primary" onclick="submitReport()">Buat Laporan</button>
+    <button class="btn-secondary" onclick="closeOverlay('report-overlay')">Batal</button>
+  </div>
+</div>
+
+<script>
+// ========================================
+// KONFIGURASI — EDIT BAGIAN INI
+// ========================================
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz0axxRn_NZ_OKLJzsjlBpc4NbBiLxWGI6fZT786SJjJ5SKCXXrA6itTBwSxrs_JvI/exec'; // sama dengan yang dipakai di index.html
+const TIMEZONE = 'Asia/Jayapura';
+const INCOME_CATEGORIES = ['Kotak Amal', 'Infaq', 'Pembangunan', "Sedekah Jum'at", 'Maulid Nabi SAW', 'Lainnya'];
+const EXPENSE_CATEGORIES = ['Operasional', 'Pembangunan', 'Maulid Nabi SAW', "Sedekah Jum'at", 'Lainnya'];
+const IDLE_LIMIT_MS = 15 * 60 * 1000;   // otomatis keluar bila 15 menit tidak ada aktivitas
+
+// PIN hanya disimpan di memori halaman ini (hilang saat halaman ditutup/dimuat ulang).
+let adminPin = '';
+let ledgerData = null;
+let pendingList = [];
+let idleTimer = null;
+
+// ========================================
+// ALAT BANTU
+// ========================================
+const $ = (id) => document.getElementById(id);
+function esc(s) {
+  return String(s === null || s === undefined ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function h(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined && text !== null) e.textContent = text;
+  return e;
+}
+function formatRp(n) {
+  const v = Math.round(Number(n) || 0);
+  return (v < 0 ? '-' : '') + 'Rp ' + Math.abs(v).toLocaleString('id-ID');
+}
+function fmtDate(iso, withTime) {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '-';
+  const o = { day: 'numeric', month: 'short', year: 'numeric', timeZone: TIMEZONE };
+  if (withTime) { o.hour = '2-digit'; o.minute = '2-digit'; }
+  return d.toLocaleDateString('id-ID', o);
+}
+function dateInput(d) {   // YYYY-MM-DD menurut zona waktu masjid
+  return new Date(d || Date.now()).toLocaleDateString('sv-SE', { timeZone: TIMEZONE });
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function closeOverlay(id) { $(id).classList.remove('active'); }
+function openOverlay(id) { $(id).classList.add('active'); }
+function linkBtn(label, onclick, danger) {
+  const b = h('button', 'link-btn' + (danger ? ' danger' : ''), label);
+  b.type = 'button';
+  b.onclick = onclick;
+  return b;
+}
+function waLink(noHp) {
+  let d = String(noHp || '').replace(/\D/g, '');
+  if (!d) return '';
+  if (d.indexOf('0') === 0) d = '62' + d.substring(1);
+  return 'https://wa.me/' + d;
+}
+
+async function api(action, payload) {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('GANTI') === 0) throw new Error('APPS_SCRIPT_URL belum diisi di admin.html');
+  resetIdle();
+  // Tanpa header Content-Type => "text/plain": request sederhana, tidak memicu preflight CORS.
+  const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(Object.assign({ action: action, pin: adminPin }, payload || {})) });
+  return res.json();
+}
+function netError(e) {
+  alert((e && e.message && e.message.indexOf('APPS_SCRIPT_URL') > -1) ? e.message : 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda, lalu coba lagi.');
+}
+
+// ========================================
+// LOGIN PIN + KELUAR OTOMATIS
+// ========================================
+$('pin-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') checkPin(); });
+
+async function checkPin() {
+  const pin = $('pin-input').value;
+  if (!pin) return;
+  const btn = $('pin-btn');
+  btn.disabled = true;
+  $('pin-error').textContent = '';
+  try {
+    const data = await api('getLedgerData', { pin: pin });
+    if (data.success) {
+      adminPin = pin;
+      $('pin-input').value = '';
+      showScreen('screen-dashboard');
+      renderLedger(data);
+      refreshPending();
+      resetIdle();
+    } else {
+      $('pin-error').textContent = data.message || 'PIN salah, coba lagi';
+    }
+  } catch (e) {
+    $('pin-error').textContent = (e && e.message && e.message.indexOf('APPS_SCRIPT_URL') > -1) ? e.message : 'Tidak dapat terhubung ke server';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function logout(reason) {
+  adminPin = '';
+  ledgerData = null;
+  pendingList = [];
+  clearTimeout(idleTimer);
+  document.querySelectorAll('.overlay').forEach(o => o.classList.remove('active'));
+  $('ledger-list').textContent = '';
+  $('verif-list').textContent = '';
+  ledgerEntries = [];
+  ledgerShown = LEDGER_PAGE;
+  $('ledger-search').value = '';
+  showScreen('screen-pin');
+  $('pin-error').textContent = reason || '';
+}
+function resetIdle() {
+  clearTimeout(idleTimer);
+  if (!adminPin) return;
+  idleTimer = setTimeout(() => logout('Sesi berakhir karena tidak ada aktivitas. Silakan masuk lagi.'), IDLE_LIMIT_MS);
+}
+['click', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, resetIdle, { passive: true }));
+
+// ========================================
+// DASHBOARD
+// ========================================
+function renderLedger(data) {
+  ledgerData = data;
+  $('balance-display').textContent = formatRp(data.totalBalance);
+
+  const warn = $('warn-banner');
+  if (data.warnings && data.warnings.length) {
+    warn.textContent = '';
+    warn.appendChild(h('strong', '', 'Data di Google Sheets perlu diperbaiki. Baris berikut TIDAK dihitung dalam saldo:'));
+    const ul = h('ul');
+    data.warnings.forEach(w => ul.appendChild(h('li', '', w)));
+    warn.appendChild(ul);
+    warn.style.display = '';
+  } else { warn.style.display = 'none'; }
+
+  $('saldoawal-banner').style.display = data.hasSaldoAwal ? 'none' : '';
+  const pl = $('planned-banner');
+  if (data.plannedCount > 0) {
+    pl.textContent = data.plannedCount + ' pengeluaran berstatus "Direncanakan" senilai ' + formatRp(data.plannedTotal) + ' belum mengurangi saldo.';
+    pl.style.display = '';
+  } else { pl.style.display = 'none'; }
+
+  renderRekon(data.rekonsiliasiRiwayat || []);
+  renderEntries(data.entries || []);
+}
+
+function renderRekon(list) {
+  const box = $('rk-list');
+  box.textContent = '';
+  if (!list.length) { box.appendChild(h('p', 'empty-note', 'Belum ada saldo rekening yang dicatat')); return; }
+  list.slice(0, 3).forEach(r => {
+    const d = h('div', 'rk-item');
+    const real = r.saldoBank + r.kasTunai;
+    d.appendChild(h('strong', '', 'Per ' + fmtDate(r.tanggal)));
+    d.appendChild(document.createElement('br'));
+    d.appendChild(document.createTextNode('Rekening ' + formatRp(r.saldoBank) + (r.kasTunai > 0 ? ' + tunai ' + formatRp(r.kasTunai) : '') + ' = ' + formatRp(real) + ' · Buku ' + formatRp(r.saldoBuku) + (r.pendingTotal > 0 ? ' · Menunggu ' + formatRp(r.pendingTotal) : '')));
+    d.appendChild(document.createElement('br'));
+    d.appendChild(h('span', r.sesuai ? 'rk-good' : 'rk-bad', r.sesuai ? 'Sesuai' : 'Selisih belum terjelaskan ' + formatRp(r.selisihBelumTerjelaskan)));
+    if (r.catatan) d.appendChild(document.createTextNode(' · ' + r.catatan));
+    box.appendChild(d);
+  });
+}
+
+const LEDGER_PAGE = 30;
+let ledgerEntries = [];
+let ledgerShown = LEDGER_PAGE;
+
+function renderEntries(entries) { ledgerEntries = entries; applyLedgerView(); }
+function showMoreLedger() { ledgerShown += LEDGER_PAGE; applyLedgerView(); }
+
+function applyLedgerView() {
+  const q = $('ledger-search').value.trim().toLowerCase();
+  const filtered = !q ? ledgerEntries : ledgerEntries.filter(e =>
+    [e.keterangan, e.kategori, e.penerima, e.tipe].join(' ').toLowerCase().indexOf(q) > -1);
+  const list = $('ledger-list');
+  list.textContent = '';
+  $('ledger-more').style.display = filtered.length > ledgerShown ? '' : 'none';
+  if (!filtered.length) { list.appendChild(h('p', 'empty-note', q ? 'Tidak ada transaksi yang cocok' : 'Belum ada transaksi tercatat')); return; }
+
+  filtered.slice(0, ledgerShown).forEach(e => {
+    const isIncome = e.tipe === 'Pemasukan';
+    const row = h('div', 'ledger-item');
+    const main = h('div', 'ledger-main');
+    main.appendChild(h('p', 'ledger-desc', e.keterangan));
+    const meta = [fmtDate(e.waktu), e.kategori];
+    if (!isIncome && e.penerima && e.penerima !== '-') meta.push('untuk ' + e.penerima);
+    main.appendChild(h('p', 'ledger-date', meta.join(' · ')));
+    if (e.status === 'Direncanakan') main.appendChild(h('span', 'chip plan', 'Direncanakan (belum dibayar)'));
+
+    const actions = h('div', 'entry-actions');
+    if (e.sumber === 'donasi') {
+      actions.appendChild(linkBtn('Buka ulang', () => reopenDonation(e)));
+      if (e.namaTampil !== 'Hamba Allah') actions.appendChild(linkBtn('Samarkan nama', () => hideName(e)));
+    } else {
+      if (!isIncome && e.status === 'Direncanakan') actions.appendChild(linkBtn('Tandai dibayar', () => openPayForm(e)));
+      actions.appendChild(linkBtn('Batalkan', () => openVoidForm(e), true));
+    }
+    main.appendChild(actions);
+
+    row.appendChild(main);
+    row.appendChild(h('p', 'ledger-amount ' + (isIncome ? 'in' : 'out'), (isIncome ? '+' : '-') + formatRp(e.nominal)));
+    list.appendChild(row);
+  });
+}
+
+async function refreshLedger() {
+  try {
+    const data = await api('getLedgerData');
+    if (data.success) renderLedger(data);
+  } catch (e) { alert('Tidak dapat memuat data terbaru. Periksa koneksi internet Anda.'); }
+}
+function refreshAll() { refreshLedger(); refreshPending(); }
+
+// ========================================
+// AKSI PADA RIWAYAT
+// ========================================
+async function reopenDonation(e) {
+  if (!confirm('Kembalikan donasi ' + formatRp(e.nominal) + ' ini ke antrean verifikasi? Saldo akan berkurang sampai dikonfirmasi lagi.')) return;
+  try {
+    const d = await api('reopenDonation', { orderId: e.orderId });
+    if (d.success) refreshAll(); else alert('Gagal: ' + (d.message || ''));
+  } catch (err) { netError(err); }
+}
+async function hideName(e) {
+  if (!confirm('Samarkan nama donatur ini menjadi "Hamba Allah" di halaman publik?')) return;
+  try {
+    const d = await api('hideDonorName', { orderId: e.orderId });
+    if (d.success) refreshLedger(); else alert('Gagal: ' + (d.message || ''));
+  } catch (err) { netError(err); }
+}
+
+let voidTarget = null;
+function openVoidForm(e) {
+  voidTarget = e;
+  $('void-info').textContent = e.tipe + ' ' + formatRp(e.nominal) + ' — ' + e.keterangan + '. Entri tidak dihapus, hanya ditandai Dibatalkan dan tidak dihitung lagi.';
+  $('void-reason').value = '';
+  openOverlay('void-overlay');
+}
+async function submitVoid() {
+  if (!voidTarget) return;
+  const reason = $('void-reason').value.trim();
+  if (!reason) { alert('Isi alasan pembatalan.'); return; }
+  const btn = $('void-save'); btn.disabled = true;
+  try {
+    const d = await api('voidEntry', { entryId: voidTarget.entryId, reason: reason });
+    if (d.success) { closeOverlay('void-overlay'); refreshLedger(); } else alert('Gagal: ' + (d.message || ''));
+  } catch (err) { netError(err); } finally { btn.disabled = false; }
+}
+
+let payTarget = null;
+function openPayForm(e) {
+  payTarget = e;
+  $('pay-info').textContent = formatRp(e.nominal) + ' — ' + e.keterangan + (e.penerima ? ' (untuk ' + e.penerima + ')' : '');
+  $('pay-date').value = dateInput();
+  $('pay-date').max = dateInput();
+  openOverlay('pay-overlay');
+}
+async function submitPay() {
+  if (!payTarget) return;
+  const btn = $('pay-save'); btn.disabled = true;
+  try {
+    const d = await api('markExpensePaid', { entryId: payTarget.entryId, tanggal: $('pay-date').value });
+    if (d.success) { closeOverlay('pay-overlay'); refreshLedger(); } else alert('Gagal: ' + (d.message || ''));
+  } catch (err) { netError(err); } finally { btn.disabled = false; }
+}
+
+// ========================================
+// VERIFIKASI BUKTI TRANSFER
+// ========================================
+let rejectingOrderId = null;
+
+async function refreshPending() {
+  try {
+    const data = await api('getPendingVerifications');
+    if (!data.success) return;
+    pendingList = data.pending;
+    const card = $('pending-card');
+    if (data.pending.length === 0) { card.style.display = 'none'; if ($('screen-verifikasi').classList.contains('active')) renderVerificationQueue(); return; }
+    const flagged = data.pending.filter(p => p.nominalKembar || !p.kodeUnik).length;
+    card.style.display = 'flex';
+    $('pending-card-count').textContent = 'Menunggu Verifikasi (' + data.pending.length + ')' + (flagged ? ' · ' + flagged + ' perlu perhatian' : '');
+    $('pending-card-amount').textContent = formatRp(data.totalPending);
+    if ($('screen-verifikasi').classList.contains('active')) renderVerificationQueue();
+  } catch (e) { /* diam: kartu tidak tampil */ }
+}
+
+function openVerificationScreen() {
+  showScreen('screen-verifikasi');
+  renderVerificationQueue();
+}
+
+function renderVerificationQueue() {
+  const list = $('verif-list');
+  list.textContent = '';
+  if (pendingList.length === 0) {
+    list.appendChild(h('p', 'empty-note', 'Tidak ada bukti transfer yang menunggu verifikasi'));
+    return;
+  }
+  // Terlama dulu: urutan sama dengan mutasi rekening sehingga lebih mudah dicocokkan.
+  const sorted = pendingList.slice().sort((a, b) => new Date(a.waktu) - new Date(b.waktu));
+  sorted.forEach(item => {
+    const card = h('div', 'verif-item');
+    const top = h('div', 'verif-item-top');
+    const left = h('div');
+    left.appendChild(h('p', 'verif-item-cat', item.kategori));
+    left.appendChild(h('p', 'verif-item-date', fmtDate(item.waktu, true)));
+    top.appendChild(left);
+    top.appendChild(h('p', 'verif-item-amount', formatRp(item.nominal)));
+    card.appendChild(top);
+
+    const flags = h('div', 'verif-flags');
+    if (item.kodeUnik) flags.appendChild(h('span', 'chip ok', 'Kode unik ' + item.kodeUnik));
+    else flags.appendChild(h('span', 'chip warn', 'Tanpa kode unik: periksa lebih teliti'));
+    if (item.nominalKembar) flags.appendChild(h('span', 'chip warn', 'Nominal kembar dengan donasi lain'));
+    card.appendChild(flags);
+
+    const donor = h('p', 'verif-item-donor', 'Pengirim: ' + (item.namaPengirim || 'Hamba Allah') + (item.noHp ? ' • ' + item.noHp : ''));
+    const wa = waLink(item.noHp);
+    if (wa) { const a = h('a', 'link-btn verif-wa', 'WhatsApp'); a.href = wa; a.target = '_blank'; a.rel = 'noopener'; donor.appendChild(a); }
+    card.appendChild(donor);
+
+    if (/^https:\/\//.test(String(item.linkBukti))) {
+      const a = h('a', 'verif-proof-link', 'Lihat Bukti Transfer');
+      a.href = item.linkBukti; a.target = '_blank'; a.rel = 'noopener';
+      card.appendChild(a);
+    }
+
+    const row = h('div', 'verif-action-row');
+    const ok = h('button', 'btn-confirm', 'Konfirmasi'); ok.type = 'button';
+    ok.onclick = () => confirmVerification(item, ok);
+    const no = h('button', 'btn-reject', 'Tolak'); no.type = 'button';
+    no.onclick = () => openRejectModal(item);
+    row.appendChild(ok); row.appendChild(no);
+    card.appendChild(row);
+    list.appendChild(card);
+  });
+}
+
+async function confirmVerification(item, btn) {
+  if (!confirm('Konfirmasi donasi ' + formatRp(item.nominal) + '?\n\nPastikan nominal ini ada di mutasi rekening.')) return;
+  btn.disabled = true;
+  try {
+    const d = await api('confirmDonation', { orderId: item.orderId });
+    if (d.success) {
+      pendingList = pendingList.filter(p => p.orderId !== item.orderId);
+      renderVerificationQueue();
+      refreshAll();
+    } else { alert('Gagal mengonfirmasi: ' + (d.message || '')); btn.disabled = false; }
+  } catch (e) { netError(e); btn.disabled = false; }
+}
+
+function openRejectModal(item) {
+  rejectingOrderId = item.orderId;
+  $('reject-reason').value = '';
+  openOverlay('reject-overlay');
+}
+
+async function confirmReject() {
+  if (!rejectingOrderId) return;
+  const orderId = rejectingOrderId;
+  try {
+    const d = await api('rejectDonation', { orderId: orderId, reason: $('reject-reason').value });
+    if (d.success) {
+      closeOverlay('reject-overlay');
+      pendingList = pendingList.filter(p => p.orderId !== orderId);
+      rejectingOrderId = null;
+      renderVerificationQueue();
+      refreshAll();
+    } else { alert('Gagal menolak: ' + (d.message || '')); }
+  } catch (e) { netError(e); }
+}
+
+// ========================================
+// TAMBAH ENTRI MANUAL
+// ========================================
+let currentEntryType = 'Pemasukan';
+
+function minAllowedDate() {
+  return (ledgerData && ledgerData.saldoAwalTanggal) ? dateInput(ledgerData.saldoAwalTanggal) : '';
+}
+
+function openEntryForm(tipe) {
+  currentEntryType = tipe;
+  $('entry-title').textContent = 'Tambah ' + tipe;
+  const sel = $('entry-category');
+  sel.textContent = '';
+  (tipe === 'Pemasukan' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES).forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o); });
+  $('entry-desc').value = '';
+  $('entry-amount').value = '';
+  $('entry-recipient').value = '';
+  $('entry-status').value = 'Sudah Dibayar';
+  $('entry-expense-fields').style.display = tipe === 'Pengeluaran' ? '' : 'none';
+  $('entry-date').value = dateInput();
+  $('entry-date').max = dateInput();
+  $('entry-date').min = minAllowedDate();
+  onEntryStatusChange();
+  openOverlay('entry-overlay');
+}
+
+function onEntryStatusChange() {
+  const planned = currentEntryType === 'Pengeluaran' && $('entry-status').value === 'Direncanakan';
+  $('entry-date-row').style.display = planned ? 'none' : '';   // rencana: tanggal dicatat otomatis (hari ini)
+}
+
+async function submitEntry() {
+  const keterangan = $('entry-desc').value.trim();
+  const nominal = Number($('entry-amount').value);
+  if (!keterangan) { alert('Isi keterangan.'); return; }
+  if (!Number.isInteger(nominal) || nominal <= 0) { alert('Nominal harus angka bulat lebih dari 0, tanpa titik atau koma.'); return; }
+
+  const payload = { tipe: currentEntryType, keterangan: keterangan, nominal: nominal, kategori: $('entry-category').value };
+  if (currentEntryType === 'Pengeluaran') {
+    const penerima = $('entry-recipient').value.trim();
+    if (!penerima) { alert('Isi nama penerima pembayaran.'); return; }
+    payload.penerima = penerima;
+    payload.status = $('entry-status').value;
+  }
+  if (!(currentEntryType === 'Pengeluaran' && payload.status === 'Direncanakan')) payload.tanggal = $('entry-date').value;
+
+  const btn = $('entry-save'); btn.disabled = true;
+  try {
+    const d = await api('addManualEntry', payload);
+    if (d.success) { closeOverlay('entry-overlay'); refreshLedger(); }
+    else alert('Gagal menyimpan: ' + (d.message || ''));
+  } catch (e) { netError(e); } finally { btn.disabled = false; }
+}
+
+// ========================================
+// SALDO AWAL
+// ========================================
+function openSaldoAwalForm() {
+  $('sa-date').value = '';
+  $('sa-date').max = dateInput();
+  $('sa-amount').value = '';
+  openOverlay('saldoawal-overlay');
+}
+async function submitSaldoAwal() {
+  const tanggal = $('sa-date').value;
+  const nominal = Number($('sa-amount').value);
+  if (!tanggal) { alert('Pilih tanggal Saldo Awal.'); return; }
+  if (!Number.isInteger(nominal) || nominal <= 0) { alert('Nominal harus angka bulat lebih dari 0.'); return; }
+  if (!confirm('Catat Saldo Awal ' + formatRp(nominal) + ' per ' + fmtDate(tanggal + 'T12:00:00') + '? Ini hanya bisa dicatat sekali.')) return;
+  const btn = $('sa-save'); btn.disabled = true;
+  try {
+    const d = await api('addSaldoAwal', { tanggal: tanggal, nominal: nominal });
+    if (d.success) { closeOverlay('saldoawal-overlay'); refreshLedger(); }
+    else alert('Gagal: ' + (d.message || ''));
+  } catch (e) { netError(e); } finally { btn.disabled = false; }
+}
+
+// ========================================
+// SALDO REKENING BANK
+// ========================================
+function openBankForm() {
+  $('bank-date').value = dateInput();
+  $('bank-date').max = dateInput();
+  $('bank-date').min = minAllowedDate();
+  $('bank-amount').value = '';
+  $('bank-cash').value = '';
+  $('bank-note').value = '';
+  $('bank-form').style.display = '';
+  $('bank-result').style.display = 'none';
+  openOverlay('bank-overlay');
+}
+async function submitBank() {
+  const saldoBank = Number($('bank-amount').value);
+  const cashRaw = $('bank-cash').value.trim();
+  const kasTunai = cashRaw === '' ? 0 : Number(cashRaw);
+  if ($('bank-amount').value.trim() === '' || !Number.isInteger(saldoBank) || saldoBank < 0) { alert('Saldo rekening harus angka bulat (0 atau lebih), tanpa titik atau koma.'); return; }
+  if (!Number.isInteger(kasTunai) || kasTunai < 0) { alert('Kas tunai harus angka bulat (0 atau lebih).'); return; }
+
+  const btn = $('bank-save'); btn.disabled = true;
+  try {
+    const d = await api('catatSaldoBank', { tanggal: $('bank-date').value, saldoBank: saldoBank, kasTunai: kasTunai, catatan: $('bank-note').value.trim() });
+    if (d.success) {
+      const box = $('bank-result-text');
+      box.textContent = '';
+      const line = (k, v, cls) => { const p = h('div'); p.appendChild(document.createTextNode(k + ': ')); p.appendChild(h('strong', cls || '', v)); box.appendChild(p); };
+      line('Uang riil (rekening + tunai)', formatRp(saldoBank + kasTunai));
+      line('Saldo buku pada tanggal itu', formatRp(d.saldoBuku));
+      line('Donasi menunggu verifikasi', formatRp(d.pendingTotal));
+      line('Selisih', formatRp(d.selisih));
+      line('Selisih belum terjelaskan', formatRp(d.selisihBelumTerjelaskan), d.selisihBelumTerjelaskan === 0 ? 'rk-good' : 'rk-bad');
+      if (d.selisihBelumTerjelaskan !== 0) {
+        const p = h('p', 'help', d.selisihBelumTerjelaskan > 0
+          ? 'Uang riil lebih besar dari catatan: kemungkinan ada transfer masuk yang donaturnya belum mengirim bukti. Cek mutasi, lalu catat sebagai Pemasukan.'
+          : 'Catatan lebih besar dari uang riil: periksa bukti palsu/nominal salah di donasi yang menunggu, atau kas tunai yang belum diisi.');
+        p.style.margin = '8px 0 0';
+        box.appendChild(p);
+      }
+      $('bank-form').style.display = 'none';
+      $('bank-result').style.display = '';
+      refreshLedger();
+    } else { alert('Gagal: ' + (d.message || '')); }
+  } catch (e) { netError(e); } finally { btn.disabled = false; }
+}
+
+// ========================================
+// LAPORAN PERIODE
+// ========================================
+function openReportForm() { openOverlay('report-overlay'); }
+
+async function submitReport() {
+  const start = $('report-start').value;
+  const end = $('report-end').value;
+  if (!start || !end) { alert('Pilih tanggal mulai dan akhir'); return; }
+  try {
+    const data = await api('generateReport', { startDate: start, endDate: end });
+    if (data.success) {
+      closeOverlay('report-overlay');
+      renderReport(data, start, end);
+      showScreen('screen-report');
+    } else { alert('Gagal membuat laporan: ' + (data.message || '')); }
+  } catch (e) { netError(e); }
+}
+
+function renderReport(data, start, end) {
+  const fmt = d => new Date(d + 'T12:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', timeZone: TIMEZONE });
+  let html = '<h3 style="margin-top:20px;">Laporan Keuangan Masjid Al-Falah</h3>';
+  html += '<p style="color:#6B6459; font-size:14px; margin-top:-10px;">' + esc(fmt(start)) + ' — ' + esc(fmt(end)) + '</p>';
+  html += '<div class="report-row total"><span>Saldo Awal</span><span>' + esc(formatRp(data.saldoAwal)) + '</span></div>';
+  html += '<p class="report-section-title">Penerimaan</p>';
+  data.penerimaan.forEach(e => { html += '<div class="report-row"><span>' + esc(e.keterangan) + '</span><span>' + esc(formatRp(e.nominal)) + '</span></div>'; });
+  html += '<div class="report-row total"><span>Jumlah Penerimaan</span><span>' + esc(formatRp(data.totalPenerimaan)) + '</span></div>';
+  html += '<p class="report-section-title">Pengeluaran</p>';
+  data.pengeluaran.forEach(e => { html += '<div class="report-row"><span>' + esc(e.keterangan) + '</span><span>' + esc(formatRp(e.nominal)) + '</span></div>'; });
+  html += '<div class="report-row total"><span>Jumlah Pengeluaran</span><span>' + esc(formatRp(data.totalPengeluaran)) + '</span></div>';
+  html += '<div class="report-row total" style="margin-top:14px; font-size:17px; color:var(--teal-deep);"><span>Saldo Akhir</span><span>' + esc(formatRp(data.saldoAkhir)) + '</span></div>';
+  html += '<p style="font-size:12.5px; color:#8A8375; margin-top:20px;">Tekan "Cetak / Simpan PDF" di bawah laporan, lalu pilih "Simpan sebagai PDF" untuk arsip atau tanda tangan Ketua dan Bendahara.</p>';
+  $('report-output').innerHTML = html;
+}
+</script>
+</body>
+</html>
