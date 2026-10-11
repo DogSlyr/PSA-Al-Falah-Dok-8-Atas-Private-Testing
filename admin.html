@@ -520,12 +520,14 @@
   <div class="sheet">
     <h3>Catat Saldo Rekening Bank</h3>
     <div id="bank-form">
-      <p class="help" style="margin-top:-8px;">Salin dari mutasi/buku rekening BSI. Sistem membandingkannya dengan saldo buku pada tanggal yang sama dan hasilnya tampil di halaman publik.</p>
+      <p class="help" style="margin-top:-8px;">Salin saldo dari mutasi/buku rekening BSI pada tanggal yang dipilih. Sistem membandingkannya dengan saldo buku pada tanggal yang sama. <strong>Hasilnya langsung tampil di halaman publik.</strong> Ini bukan transaksi dan tidak mengubah saldo buku.</p>
+      <div class="banner info" id="bank-current" style="margin-bottom:14px;"></div>
       <label class="form-label">Tanggal saldo</label>
       <input type="date" class="form-input" id="bank-date">
       <label class="form-label">Saldo rekening BSI (Rp, angka saja)</label>
       <input type="number" inputmode="numeric" class="form-input" id="bank-amount" placeholder="0" min="0" step="1">
       <label class="form-label">Kas tunai di tangan pengurus (Rp, kosongkan jika 0)</label>
+      <p class="help" style="margin-top:-2px;">Uang tunai yang sudah dicatat sebagai Pemasukan tetapi belum disetor ke bank, misalnya isi kotak amal.</p>
       <input type="number" inputmode="numeric" class="form-input" id="bank-cash" placeholder="0" min="0" step="1">
       <label class="form-label">Catatan (opsional, tampil publik)</label>
       <input type="text" class="form-input" id="bank-note" maxlength="150" placeholder="Contoh: Cocok dengan mutasi s.d. 30 September">
@@ -1038,6 +1040,7 @@ async function submitSaldoAwal() {
 // SALDO REKENING BANK
 // ========================================
 function openBankForm() {
+  $('bank-current').textContent = 'Saldo buku saat ini: ' + formatRp(ledgerData ? ledgerData.totalBalance : 0) + '. Bila saldo rekening + kas tunai sama dengan angka ini (ditambah donasi yang menunggu verifikasi), hasilnya "Sesuai".';
   $('bank-date').value = dateInput();
   $('bank-date').max = dateInput();
   $('bank-date').min = minAllowedDate();
@@ -1055,6 +1058,7 @@ async function submitBank() {
   if ($('bank-amount').value.trim() === '' || !Number.isInteger(saldoBank) || saldoBank < 0) { alert('Saldo rekening harus angka bulat (0 atau lebih), tanpa titik atau koma.'); return; }
   if (!Number.isInteger(kasTunai) || kasTunai < 0) { alert('Kas tunai harus angka bulat (0 atau lebih).'); return; }
 
+  if (!confirm('Simpan saldo rekening ' + formatRp(saldoBank) + ' + kas tunai ' + formatRp(kasTunai) + ' per ' + fmtDate($('bank-date').value + 'T12:00:00') + '?\n\nHasilnya langsung tampil di halaman publik.')) return;
   const btn = $('bank-save'); btn.disabled = true;
   try {
     const d = await api('catatSaldoBank', { tanggal: $('bank-date').value, saldoBank: saldoBank, kasTunai: kasTunai, catatan: $('bank-note').value.trim() });
