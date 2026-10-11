@@ -363,7 +363,11 @@
   .verif-wa { font-size: 12.5px; margin-left: 6px; }
   .btn-confirm:disabled, .btn-reject:disabled { opacity: 0.5; }
   select.form-input { background: var(--white); }
+  .date-hint { font-size: 13px; font-weight: 700; color: var(--teal-deep); margin: -8px 0 14px; min-height: 0; }
+  .date-hint:empty { display: none; }
+  @page { size: A4; margin: 16mm; }
   @media print {
+    .no-print { display: none !important; }
     body * { visibility: hidden; }
     #report-output, #report-output * { visibility: visible; }
     #report-output { position: absolute; left: 0; top: 0; width: 100%; padding: 0 16px; }
@@ -438,7 +442,8 @@
       </div>
       <button class="btn-secondary" id="ledger-more" onclick="showMoreLedger()" style="display:none;">Tampilkan lebih banyak</button>
 
-      <button class="btn-secondary" style="margin-top:18px;" onclick="logout()">Keluar</button>
+      <a class="btn-secondary" href="index.html" style="display:block; text-align:center; text-decoration:none; margin-top:18px;">Lihat halaman publik</a>
+      <button class="btn-secondary" style="margin-top:8px;" onclick="logout()">Keluar</button>
     </div>
 
     <!-- ============ SCREEN: VERIFIKASI BUKTI TRANSFER ============ -->
@@ -589,7 +594,11 @@ const EXPENSE_CATEGORIES = ['Operasional', 'Pembangunan', 'Maulid Nabi SAW', "Se
 const IDLE_LIMIT_MS = 15 * 60 * 1000;   // otomatis keluar bila 15 menit tidak ada aktivitas
 
 // PIN hanya disimpan di memori halaman ini (hilang saat halaman ditutup/dimuat ulang).
-let adminPin = '';
+let adminToken = '';          // token sesi dari server (PIN tidak pernah disimpan)
+const SESSION_KEY = 'alfalah_admin_session_v1';
+let lastRequestAt = 0;
+let lastActivity = Date.now();
+let lastTouch = 0;
 let ledgerData = null;
 let pendingList = [];
 let idleTimer = null;
@@ -628,7 +637,22 @@ function showScreen(id) {
   window.scrollTo(0, 0);
 }
 function closeOverlay(id) { $(id).classList.remove('active'); }
-function openOverlay(id) { $(id).classList.add('active'); }
+function openOverlay(id) { $(id).classList.add('active'); refreshDateHints(); }
+
+// Kolom tanggal mengikuti bahasa browser (mis. "10/11/2026" bisa dibaca 11 Okt atau 10 Nov),
+// jadi tampilkan tanggal terpilih dalam bentuk yang tidak ambigu di bawah kolomnya.
+function refreshDateHints() {
+  document.querySelectorAll('input[type=date]').forEach(inp => {
+    let hint = inp.nextElementSibling;
+    if (!hint || !hint.classList.contains('date-hint')) {
+      hint = h('p', 'date-hint');
+      inp.insertAdjacentElement('afterend', hint);
+    }
+    hint.textContent = inp.value ? '→ ' + fmtDate(inp.value + 'T12:00:00') : '';
+  });
+}
+document.addEventListener('input', (e) => { if (e.target && e.target.type === 'date') refreshDateHints(); });
+document.addEventListener('change', (e) => { if (e.target && e.target.type === 'date') refreshDateHints(); });
 function linkBtn(label, onclick, danger) {
   const b = h('button', 'link-btn' + (danger ? ' danger' : ''), label);
   b.type = 'button';
@@ -646,10 +670,18 @@ async function api(action, payload) {
   if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('GANTI') === 0) throw new Error('APPS_SCRIPT_URL belum diisi di admin.html');
   resetIdle();
   // Tanpa header Content-Type => "text/plain": request sederhana, tidak memicu preflight CORS.
-  const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(Object.assign({ action: action, pin: adminPin }, payload || {})) });
-  return res.json();
+  const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify(Object.assign({ action: action, token: adminToken }, payload || {})) });
+  const d = await res.json();
+  if (d && d.sessionExpired) {
+    endSession('Sesi berakhir. Silakan masuk lagi.');
+    throw new Error('SESSION_EXPIRED');
+  }
+  lastRequestAt = Date.now();
+  return d;
 }
+function isSessionError(e) { return !!(e && e.message === 'SESSION_EXPIRED'); }
 function netError(e) {
+  if (isSessionError(e)) return;   // layar sudah berpindah ke halaman masuk
   alert((e && e.message && e.message.indexOf('APPS_SCRIPT_URL') > -1) ? e.message : 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda, lalu coba lagi.');
 }
 
@@ -665,26 +697,58 @@ async function checkPin() {
   btn.disabled = true;
   $('pin-error').textContent = '';
   try {
-    const data = await api('getLedgerData', { pin: pin });
-    if (data.success) {
-      adminPin = pin;
+    const login = await api('login', { pin: pin });
+    if (login.success) {
+      adminToken = login.token;
       $('pin-input').value = '';
-      showScreen('screen-dashboard');
-      renderLedger(data);
-      refreshPending();
-      resetIdle();
+      saveSession();
+      await enterDashboard();
     } else {
-      $('pin-error').textContent = data.message || 'PIN salah, coba lagi';
+      $('pin-error').textContent = login.message || 'PIN salah, coba lagi';
     }
   } catch (e) {
+    if (isSessionError(e)) { btn.disabled = false; return; }
     $('pin-error').textContent = (e && e.message && e.message.indexOf('APPS_SCRIPT_URL') > -1) ? e.message : 'Tidak dapat terhubung ke server';
   } finally {
     btn.disabled = false;
   }
 }
 
+async function enterDashboard() {
+  const data = await api('getLedgerData');
+  if (!data.success) throw new Error(data.message || 'Gagal memuat data');
+  showScreen('screen-dashboard');
+  renderLedger(data);
+  refreshPending();
+  resetIdle();
+}
+
+// ----- Penyimpanan sesi di browser: hanya token acak + waktu aktivitas terakhir -----
+function saveSession() {
+  try { localStorage.setItem(SESSION_KEY, JSON.stringify({ token: adminToken, lastActive: Date.now() })); } catch (e) { /* abaikan */ }
+}
+function readSession() {
+  try {
+    const s = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+    if (s && s.token && Date.now() - s.lastActive < IDLE_LIMIT_MS) return s;
+  } catch (e) { /* abaikan */ }
+  clearSessionStore();
+  return null;
+}
+function clearSessionStore() { try { localStorage.removeItem(SESSION_KEY); } catch (e) { /* abaikan */ } }
+
+// Tombol Keluar / habis waktu: cabut token di server, lalu bersihkan browser.
 function logout(reason) {
-  adminPin = '';
+  const t = adminToken;
+  if (t) {
+    try { fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'logout', token: t }) }).catch(() => {}); } catch (e) { /* abaikan */ }
+  }
+  endSession(reason);
+}
+
+function endSession(reason) {
+  adminToken = '';
+  clearSessionStore();
   ledgerData = null;
   pendingList = [];
   clearTimeout(idleTimer);
@@ -699,9 +763,35 @@ function logout(reason) {
 }
 function resetIdle() {
   clearTimeout(idleTimer);
-  if (!adminPin) return;
+  if (!adminToken) return;
+  lastActivity = Date.now();
+  if (lastActivity - lastTouch > 30000) { lastTouch = lastActivity; saveSession(); }   // dibaca halaman publik & muat ulang
   idleTimer = setTimeout(() => logout('Sesi berakhir karena tidak ada aktivitas. Silakan masuk lagi.'), IDLE_LIMIT_MS);
 }
+
+// Selama Bendahara aktif (mengetik/menggulir) tanpa mengirim request, sesi di server tetap diperpanjang.
+function keepAlive() {
+  if (!adminToken) return;
+  if (Date.now() - lastActivity < IDLE_LIMIT_MS && Date.now() - lastRequestAt > 4 * 60 * 1000) {
+    api('ping').catch(() => {});
+  }
+}
+setInterval(keepAlive, 60000);
+
+// Muat ulang halaman / buka lagi dalam 15 menit: lanjut tanpa PIN bila token masih sah.
+(async function restoreSession() {
+  const s = readSession();
+  if (!s) return;
+  adminToken = s.token;
+  $('pin-error').textContent = 'Memeriksa sesi…';
+  try {
+    await enterDashboard();
+    $('pin-error').textContent = '';
+  } catch (e) {
+    adminToken = '';
+    if (!isSessionError(e)) $('pin-error').textContent = 'Tidak dapat memeriksa sesi (periksa koneksi). Muat ulang halaman atau masuk dengan PIN.';
+  }
+})();
 ['click', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, resetIdle, { passive: true }));
 
 // ========================================
@@ -795,7 +885,7 @@ async function refreshLedger() {
   try {
     const data = await api('getLedgerData');
     if (data.success) renderLedger(data);
-  } catch (e) { alert('Tidak dapat memuat data terbaru. Periksa koneksi internet Anda.'); }
+  } catch (e) { if (!isSessionError(e)) alert('Tidak dapat memuat data terbaru. Periksa koneksi internet Anda.'); }
 }
 function refreshAll() { refreshLedger(); refreshPending(); }
 
@@ -1116,7 +1206,7 @@ function renderReport(data, start, end) {
   data.pengeluaran.forEach(e => { html += '<div class="report-row"><span>' + esc(e.keterangan) + '</span><span>' + esc(formatRp(e.nominal)) + '</span></div>'; });
   html += '<div class="report-row total"><span>Jumlah Pengeluaran</span><span>' + esc(formatRp(data.totalPengeluaran)) + '</span></div>';
   html += '<div class="report-row total" style="margin-top:14px; font-size:17px; color:var(--teal-deep);"><span>Saldo Akhir</span><span>' + esc(formatRp(data.saldoAkhir)) + '</span></div>';
-  html += '<p style="font-size:12.5px; color:#8A8375; margin-top:20px;">Tekan "Cetak / Simpan PDF" di bawah laporan, lalu pilih "Simpan sebagai PDF" untuk arsip atau tanda tangan Ketua dan Bendahara.</p>';
+  html += '<p class="no-print" style="font-size:12.5px; color:#8A8375; margin-top:20px;">Tekan "Cetak / Simpan PDF" di bawah laporan, lalu pilih "Simpan sebagai PDF" untuk arsip atau tanda tangan Ketua dan Bendahara.</p>';
   $('report-output').innerHTML = html;
 }
 </script>
